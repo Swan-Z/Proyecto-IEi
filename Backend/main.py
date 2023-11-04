@@ -4,8 +4,6 @@ from repositorio import *
 
 app = Flask(__name__)
 
-supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
-
 @app.route('/')
 def index():
     return "Hello, World!"
