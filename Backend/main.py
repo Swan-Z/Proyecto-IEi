@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify
 import requests
-from config import *
-from supabase_py import create_client, Client
+from repositorio import *
 
 app = Flask(__name__)
 
@@ -13,8 +12,7 @@ def index():
 
 @app.route('/hello', methods=['GET'])
 def consultarUsuarios():
-    usuarios = supabase.table('usuario').select().execute()
-    return jsonify(usuarios)
+    return Repositorio.getUsuarios()
 
 if __name__ == '__main__':
     app.run(debug=True)
