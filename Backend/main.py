@@ -10,7 +10,15 @@ def index():
 
 @app.route('/hello', methods=['GET'])
 def consultarUsuarios():
-    return Repositorio.getUsuarios()
+    return Repositorio.fetchData("usuario")
+
+@app.route('/usuario', methods=['GET'])
+def insertarUsuarios():
+    data = {
+        "nombre": "goodmorning",
+        "password": "world"
+    }
+    Repositorio.insertData("usuario", data)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)
