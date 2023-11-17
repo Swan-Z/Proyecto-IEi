@@ -1,5 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 class selenium:
 
@@ -11,12 +14,19 @@ class selenium:
         element.sendKeys("Universidad Politécnica de Valencia");
         element.submit();
     
-    
-        waiting = new WebDriverWait(driver,9);
-        waiting.until(ExpectedConditions.pre3senceOfeElementLocated(By.id("address")));
+
+        # Use WebDriverWaait to wait for the presence of the element with id
+        waiting = WebDriverWait(driver, 9)
+        waiting.until(EC.presence_of_element_located((By.ID, "address")))
         
-        if(driver.getTitle().equals("Universidad Politécnica de Valencia-Buscar con Google"))
-            System.out.println("PASA");
-        else System.err.println("FALLLA");
-    
-        driver.quit();
+        # Check if the title matches the expected title
+        if driver.title == "Universidad Politécnica de Valencia-Buscar con Google":
+            print("PASA")
+        else:
+            print("FALLA")
+        
+        driver.quit()
+
+# Instantiate the class and call the VerificarTitulo method
+selenium_example = SeleniumExample()
+selenium_example.VerificarTitulo()
