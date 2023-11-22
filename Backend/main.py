@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 import requests
 from repositorio import *
-from extractors import extractorCSV as e
+from extractors import extractorCSV as extractor
 
 app = Flask(__name__)
 archivo_csv = 'valenciana.csv'
@@ -25,7 +25,17 @@ def insertarUsuarios():
 
 @app.route('/csv', methods=['GET'])
 def csv():
-    e.csv_a_json(archivo_csv,'nuevo.json')
+    try:
+        extractor.csv_a_json(archivo_csv, 'nuevo.json')
+        archivo = open('nuevo.json', 'r')
+        data = {
+            "id": "46P01044"
+        }
+        print(data)
+        Repositorio.insertData("Centro_Educativo", data)
+        #return jsonify({"status": "success", "message": "Datos convertidos y guardados correctamente."})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

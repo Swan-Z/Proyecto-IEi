@@ -5,12 +5,22 @@ def csv_a_json(archivo_csv, archivo_json):
     # Lista para almacenar los datos del CSV
     datos = []
 
-    # Abrir el archivo CSV y leer los datos con la codificación 'utf-8'
     with open(archivo_csv, 'r', encoding='utf-8') as archivo:
         lector_csv = csv.DictReader(archivo, delimiter=';')
         for fila in lector_csv:
-            fila['COD'] = fila.pop('CODIGO')
+            if fila['REGIMEN'] == 'PRIV.':
+                fila['Tipo'] = 'Privado'
+            elif fila['REGIMEN'] == 'PÚB.':
+                fila['Tipo'] = 'Publico'
+            elif fila['REGIMEN'] == 'PRIV. CONC.':
+                fila['Tipo'] = 'Concertado'
+            else:
+                fila['Tipo'] = 'Otros'
+
             datos.append(fila)
+
+        for fila in lector_csv:
+            
 
     # Escribir los datos en formato JSON
     with open(archivo_json, 'w') as archivo:
