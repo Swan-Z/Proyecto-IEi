@@ -20,8 +20,6 @@ def csv_a_json(archivo_csv, archivo_json):
             datos.append(fila)
 
         for fila in lector_csv:
-            
-
-    # Escribir los datos en formato JSON
-    with open(archivo_json, 'w') as archivo:
-        json.dump(datos, archivo, indent=2)
+            # Escribir los datos en formato JSON
+            with open(archivo_json, 'w') as archivo:
+                json.dump(datos, archivo, indent=2)
