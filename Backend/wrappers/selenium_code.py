@@ -12,12 +12,13 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 from selenium.webdriver.support import expected_conditions as EC
 
-class seleniumExample:
+class SeleniumExample:
 
     def VerificarTitulo(self):
-        
+        # pylint: disable=unexpected-keyword-arg
         driver_path = 'path/to/chromedriver'
         driver = webdriver.Chrome(executable_path=driver_path)
+         # pylint: enable=unexpected-keyword-arg
         driver.get("https://www.coordenadas-gps.com/")
         element = driver.find_element("id","address")
         element.send_Keys("Universidad Politécnica de Valencia")
