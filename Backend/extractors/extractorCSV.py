@@ -43,11 +43,10 @@ def csv_a_json():
                 print(fila)
             if 'CODIGO_POSTAL' in fila:
                 cp = fila['CODIGO_POSTAL']
-                fila['C_E.codigo_postal'] = cp
-                fila['Log.codigo'] = cp
-                str(cp).zfill(5)
-                fila['Pro.codigo'] = int(re.search(r'\d{2}', str(cp)).group())
-                fila.pop('CODIGO_POSTAL')
+                fila['C_E.codigo_postal'] = str(cp).zfill(5)  #añadir 0 por delante
+                fila['LOC.codigo'] = str(cp).zfill(5)
+                fila['PRO.codigo'] = re.search(r'\d{2}', str(cp).zfill(5)).group()
+               # fila.pop('CODIGO_POSTAL')  //no hace falta
             else:
                 print('No existe la clave CODIGO_POSTAL')
                 print(fila)
@@ -62,12 +61,12 @@ def csv_a_json():
                 print('No existe la clave URL_ES')
                 print(fila)
             if 'LOCALIDAD' in fila:
-                fila['Log.nombre'] = fila.pop('LOCALIDAD')
+                fila['LOC.nombre'] = fila.pop('LOCALIDAD')
             else:
                 print('No existe la clave LOCALIDAD')
                 print(fila)
             if 'PROVINCIA' in fila:
-                fila['Pro.nombre'] = fila.pop('PROVINCIA')
+                fila['PRO.nombre'] = fila.pop('PROVINCIA')
             else:
                 print('No existe la clave PROVINCIA')
                 print(fila)
@@ -79,10 +78,10 @@ def csv_a_json():
                 'C_E.codigo_postal': fila['C_E.codigo_postal'],
                 'C_E.telefono': fila['C_E.telefono'],
                 'C_E.descripcion': fila['C_E.descripcion'],
-                'Log.nombre': fila['Log.nombre'],
-                'Log.codigo': fila['Log.codigo'],
-                'Pro.nombre': fila['Pro.nombre'],
-                'Pro.codigo': fila['Pro.codigo']
+                'LOC.nombre': fila['LOC.nombre'],
+                'LOC.codigo': fila['LOC.codigo'],
+                'PRO.nombre': fila['PRO.nombre'],
+                'PRO.codigo': fila['PRO.codigo']
             }
             datos.append(nuevo_dato)
         
