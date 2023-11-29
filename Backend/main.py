@@ -25,7 +25,7 @@ def insertarUsuarios():
 @app.route('/csv', methods=['GET'])
 def csv():
     try:
-        extractor.Mapjson()
+        extractor.csv_a_json()
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
  
