@@ -1,19 +1,37 @@
+"""
+Descripción del propósito de tu script.
+Puedes añadir más detalles aquí si es necesario.
+"""
 from selenium import webdriver
+
 from selenium.webdriver.common.keys import Keys
+
 from selenium.webdriver.common.by import By
+
 from selenium.webdriver.support.ui import WebDriverWait
+
 from selenium.webdriver.support import expected_conditions as EC
 
-class selenium:
-
-    def VerificarTitulo():
+class SeleniumExample:
+    """
+    Clase para realizar verificación del título en la página web.
+    """
+    def verificar_titulo(self):
+        """
+        Verifica el título de la página después de realizar una búsqueda.
+        """
+        
+        # pylint: disable=unexpected-keyword-arg
         driver_path = 'path/to/chromedriver'
         driver = webdriver.Chrome(executable_path=driver_path)
+         # pylint: enable=unexpected-keyword-arg
         driver.get("https://www.coordenadas-gps.com/")
         element = driver.find_element("id","address")
-        element.sendKeys("Universidad Politécnica de Valencia")
-        element.submit()
-    
+        element.send_Keys("Universidad Politécnica de Valencia")
+        element.submit();
+
+        # Aquí usamos Keys.ENTER para simular la tecla Enter
+        element.send_keys(Keys.ENTER)
 
         # Use WebDriverWaait to wait for the presence of the element with id
         waiting = WebDriverWait(driver, 9)
@@ -29,4 +47,4 @@ class selenium:
 
 # Instantiate the class and call the VerificarTitulo method
 selenium_example = SeleniumExample()
-selenium_example.VerificarTitulo()
+selenium_example.verificar_titulo()
