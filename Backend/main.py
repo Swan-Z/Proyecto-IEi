@@ -22,20 +22,26 @@ def insertarUsuarios():
     }
     Repositorio.insertData("usuario", data)
 
-
 @app.route('/csv', methods=['GET'])
 def csv():
     try:
-        extractor.csv_a_json(archivo_csv, 'nuevo.json')
-        archivo = open('nuevo.json', 'r')
-        data = {
-            "id": "46P01044"
-        }
-        print(data)
-        Repositorio.insertData("Centro_Educativo", data)
-        #return jsonify({"status": "success", "message": "Datos convertidos y guardados correctamente."})
+        extractor.Mapjson()
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
+ 
+# @app.route('/csv', methods=['GET'])
+# def csv():
+#     try:
+#         extractor.csv_a_json(archivo_csv, 'nuevo.json')
+#         archivo = open('nuevo.json', 'r')
+#         data = {
+#             "id": "46P01044"
+#         }
+#         print(data)
+#         Repositorio.insertData("Centro_Educativo", data)
+#         #return jsonify({"status": "success", "message": "Datos convertidos y guardados correctamente."})
+#     except Exception as e:
+#         return jsonify({"status": "error", "message": str(e)})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=7777)

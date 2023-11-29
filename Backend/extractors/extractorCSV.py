@@ -1,15 +1,21 @@
 import csv
 import json
+import os
 
-def csv_a_json(archivo_csv, archivo_json):
+def Mapjson():
     # Lista para almacenar los datos del CSV
     datos = []
+    directorio_actual = os.getcwd()
+    rutaJSON = 'jsonResultFromWrapper/CV.json'
+    rutaComJSON = os.path.abspath(os.path.join(directorio_actual, rutaJSON))
+    
 
-    with open(archivo_csv, 'r', encoding='utf-8') as archivo:
-        lector_csv = csv.DictReader(archivo, delimiter=';')
-        for fila in lector_csv:
+    with open(rutaComJSON, 'r', encoding='utf-8') as archivo:
+        lector_json = json.load(archivo)
+
+        for fila in lector_json:
             if fila['REGIMEN'] == 'PRIV.':
-                fila['Tipo'] = 'Privado'
+                fila['Tipo']
             elif fila['REGIMEN'] == 'PÚB.':
                 fila['Tipo'] = 'Publico'
             elif fila['REGIMEN'] == 'PRIV. CONC.':
@@ -19,7 +25,7 @@ def csv_a_json(archivo_csv, archivo_json):
 
             datos.append(fila)
 
-        for fila in lector_csv:
+        for fila in lector_json:
             # Escribir los datos en formato JSON
-            with open(archivo_json, 'w') as archivo:
-                json.dump(datos, archivo, indent=2)
+            with open('jsonResultFromWrapper/nuevoArchivo.json', 'w') as archivoNuevo:
+                json.dump(datos, archivoNuevo)
