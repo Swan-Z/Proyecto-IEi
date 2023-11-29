@@ -87,15 +87,6 @@ def csv_a_json():
             datos.append(nuevo_dato)
         
         with open(rutaComNuevo, 'w', encoding='utf-8') as archivoNuevo:
-            json.dump(datos, archivoNuevo, indent=2)
-
-            
-
-        #print(datos[0])
-    
-    # for fila in lector_json:
-    #     # Escribir los datos en formato JSON
-    #     with open(rutaComNuevo, 'w') as archivoNuevo:
-    #         json.dump(datos, archivoNuevo)
+            json.dump(datos, archivoNuevo, indent=2, ensure_ascii=False)
 
 csv_a_json()
