@@ -13,8 +13,14 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 class SeleniumExample:
-
-    def VerificarTitulo(self):
+    """
+    Clase para realizar verificación del título en la página web.
+    """
+    def verificar_titulo(self):
+        """
+        Verifica el título de la página después de realizar una búsqueda.
+        """
+        
         # pylint: disable=unexpected-keyword-arg
         driver_path = 'path/to/chromedriver'
         driver = webdriver.Chrome(executable_path=driver_path)
@@ -41,4 +47,4 @@ class SeleniumExample:
 
 # Instantiate the class and call the VerificarTitulo method
 selenium_example = SeleniumExample()
-selenium_example.VerificarTitulo()
+selenium_example.verificar_titulo()
