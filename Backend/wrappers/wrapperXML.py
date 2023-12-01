@@ -4,19 +4,23 @@ import os
 
 #Los comentados es para probar directamente en este fichero
 #python wrappers/fichero.py
-# directorio_actual = os.getcwd()
-# rutaXML = 'ficheroFuenteDatos/CAT.xml'
-# rutaJSON = 'jsonResultFromWrapper/CAT.json'
-# rutaComXML = os.path.abspath(os.path.join(directorio_actual, rutaXML))
-# rutaComJSON = os.path.abspath(os.path.join(directorio_actual, rutaJSON))
+directorio_actual = os.getcwd()
+rutaXML = 'ficheroFuenteDatos/CAT.xml'
+rutaJSON = 'extractors/jsonResultFromWrapper/CAT.json'
+rutaComXML = os.path.abspath(os.path.join(directorio_actual, rutaXML))
+rutaComJSON = os.path.abspath(os.path.join(directorio_actual, rutaJSON))
 
 def XML_to_JSON(pathXML, pathJSON):
     with open(pathXML, 'rb') as file:
         xml_dict = xmltodict.parse(file)
         row = xml_dict['response']['row']
-
     df = pd.DataFrame(row)
-
-    df.to_json(pathJSON, orient='records', indent=2)
+    df = df.to_json(orient='records', indent=2, force_ascii=False)
+    df = df.replace('\/', '/')
     
-# XML_to_JSON(rutaComXML, rutaComJSON)
+    with open(pathJSON, 'w', encoding='utf8') as file:
+        file.write(df)
+    
+    
+    
+XML_to_JSON(rutaComXML, rutaComJSON)

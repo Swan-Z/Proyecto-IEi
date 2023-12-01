@@ -94,7 +94,7 @@ def json_a_json():
                     print('No existe la clave lat')
                     
             if 'loccen' in fila:
-                fila['codigo_postal'] = fila.pop('loccen')
+                fila['localidad'] = fila.pop('loccen')
             else:
                 print('No existe la clave loccen')
                 print(fila)
@@ -117,7 +117,7 @@ def json_a_json():
 
             datoLocalidad = {
                 'codigo': fila['codigo_postal'],
-                'nombre': fila['PRO.nombre']
+                'nombre': fila['localidad']
             }
 
             datoProvincia = {
