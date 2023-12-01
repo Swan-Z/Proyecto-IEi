@@ -28,7 +28,7 @@ class SeleniumExample:
         driver.get("https://www.coordenadas-gps.com/")
         element = driver.find_element("id","address")
         element.send_Keys("Universidad Politécnica de Valencia")
-        element.submit();
+        element.submit()
 
         # Aquí usamos Keys.ENTER para simular la tecla Enter
         element.send_keys(Keys.ENTER)
