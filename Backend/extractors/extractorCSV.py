@@ -89,12 +89,12 @@ def csv_a_json():
             }
 
             datoLocalidad = {
-                'codigo': fila['codigo_postal'],
-                'nombre': fila['PRO.nombre']
+                'codigo': fila['LOC.codigo_postal'],
+                'nombre': fila['LOC.nombre']
             }
 
             datoProvincia = {
-                'codigo': fila['codigo_postal'],
+                'codigo': fila['PRO.codigo_postal'],
                 'nombre': fila['PRO.nombre']          
             }
             datos.append(datoCentro)
