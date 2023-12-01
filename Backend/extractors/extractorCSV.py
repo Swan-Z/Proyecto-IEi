@@ -49,7 +49,6 @@ def csv_a_json():
                 fila['codigo_postal'] = str(cp).zfill(5)  #añadir 0 por delante
                 fila['LOC.codigo'] = str(cp).zfill(5)
                 fila['PRO.codigo'] = re.search(r'\d{2}', str(cp).zfill(5)).group()
-               # fila.pop('CODIGO_POSTAL')  //no hace falta
             else:
                 fila['codigo_postal'] = None
                 print('No existe la clave CODIGO_POSTAL')
@@ -80,19 +79,25 @@ def csv_a_json():
                 print('No existe la clave PROVINCIA')
                 print(fila)
 
-            nuevo_dato = {
+            datoCentro = {
                 'nombre': fila['nombre'],
                 'tipo': fila['tipo'],
                 'direccion': fila['direccion'],
                 'codigo_postal': fila['codigo_postal'],
                 'telefono': fila['telefono'],
                 'descripcion': fila['descripcion'],
-                'LOC.nombre': fila['LOC.nombre'],
-                'LOC.codigo': fila['LOC.codigo'],
-                'PRO.nombre': fila['PRO.nombre'],
-                'PRO.codigo': fila['PRO.codigo']
             }
-            datos.append(nuevo_dato)
+
+            datoLocalidad = {
+                'codigo': fila['codigo_postal'],
+                'nombre': fila['PRO.nombre']
+            }
+
+            datoProvincia = {
+                'codigo': fila['codigo_postal'],
+                'nombre': fila['PRO.nombre']          
+            }
+            datos.append(datoCentro)
         
         with open(rutaComNuevo, 'w', encoding='utf-8') as archivoNuevo:
             json.dump(datos, archivoNuevo, indent=2, ensure_ascii=False)
