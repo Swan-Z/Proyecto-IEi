@@ -104,7 +104,7 @@ def json_a_json():
                 print('No existe la clave muncen')
                 print(fila)
 
-            nuevo_dato = {
+            datoCentro = {
                 'nombre': fila['nombre'],
                 'tipo': fila['tipo'],
                 'direccion': fila['direccion'],
@@ -114,6 +114,17 @@ def json_a_json():
                 'longitud': fila['longitud'],
                 'latitud': fila['latitud'],
             }
+
+            datoLocalidad = {
+                'codigo': fila['codigo_postal'],
+                'nombre': fila['PRO.nombre']
+            }
+
+            datoProvincia = {
+                'codigo': fila['codigo_postal'],
+                'nombre': fila['PRO.nombre']          
+            }
+
             # datos.append(nuevo_dato)
 
         # with open(rutaComNuevo, 'w', encoding='utf-8') as archivoNuevo:
