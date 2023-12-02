@@ -22,20 +22,20 @@ def xml_a_json():
         for fila in lector_json:
 
              # Renombrar claves si existen
-            if 'denominaci_completa' in fila:
-                fila['nombre'] = fila.pop('denominaci_completa')
+            if 'denominaci_completa' in fila['row']:
+                fila['nombre'] = fila['row'].pop('denominaci_completa')
             else:  
                 fila['nombre'] = None
                 print('No existe la clave denominaci_completa, por lo tanto esta fila no será insertada')
                 print(fila)
 
-            if 'nom_naturalesa' in fila:
-                if 'concertat' in fila['nom_naturalesa'].lower():
+            if 'nom_naturalesa' in fila['row']:
+                if 'concertat' in fila['row']['nom_naturalesa'].lower():
                     fila['tipo'] = 'Concertado'
                 else:
-                    if 'privat' in fila['nom_naturalesa'].lower():
+                    if 'privat' in fila['row']['nom_naturalesa'].lower():
                         fila['tipo'] = 'Privado'
-                    elif 'públic' in fila['nom_naturalesa'].lower():
+                    elif 'públic' in fila['row']['nom_naturalesa'].lower():
                         fila['tipo'] = 'Público'
                     else:
                         print('No se ha podido determinar el tipo de centro')
@@ -47,15 +47,15 @@ def xml_a_json():
                 print(fila)
 
 
-            if 'adre_a' in fila:
-                fila['direccion'] = fila.pop('adre_a')
+            if 'adre_a' in fila['row']:
+                fila['direccion'] = fila['row'].pop('adre_a')
             else:
                 fila['direccion'] = None
                 print('No existe la dirección, por lo tanto esta fila no será insertada')
                 print(fila)
                 
-            if 'codi_postal' in fila:
-                fila['codigo_postal'] = fila.pop('codi_postal')
+            if 'codi_postal' in fila['row']:
+                fila['codigo_postal'] = fila['row'].pop('codi_postal')
                 fila['codigo_provincia'] = fila['codigo_postal'][:2]
             else:
                 fila['codigo_provincia'] = None
@@ -66,8 +66,8 @@ def xml_a_json():
                 
             
                 
-            if 'estudis' in fila:
-                fila['descripcion'] = fila.pop('estudis')
+            if 'estudis' in fila['row']:
+                fila['descripcion'] = fila['row'].pop('estudis')
             else:
                 fila['descripcion'] = None
                 print('No existe la clave estudis')
@@ -75,21 +75,21 @@ def xml_a_json():
 
             # Mover datos de georeferencia si existen
 
-            if 'coordenades_geo_x' in fila:
-                    fila['longitud'] = fila.pop('coordenades_geo_x')
+            if 'coordenades_geo_x' in fila['row']:
+                    fila['longitud'] = fila['row'].pop('coordenades_geo_x')
             else:
                     fila['longitud'] = None
                     print('No existe la clave longitud')
                     print(fila)
-            if 'coordenades_geo_y' in fila:
-                    fila['latitud'] = fila.pop('coordenades_geo_y')
+            if 'coordenades_geo_y' in fila['row']:
+                    fila['latitud'] = fila['row'].pop('coordenades_geo_y')
             else:
                     fila['latitud'] = None
                     print('No existe la clave latitud')
                     print(fila)
             #-----------------------------------------------------------------
-            if 'nom_municipi' in fila:
-                fila['localidad'] = fila.pop('nom_municipi')
+            if 'nom_municipi' in fila['row']:
+                fila['localidad'] = fila['row'].pop('nom_municipi')
             else:
                 print('No existe la clave nom_municipi')
                 print(fila)
