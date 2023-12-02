@@ -10,8 +10,11 @@ class Repositorio:
         return jsonify(usuarios)
     
     def insertData(tablename, data):
-        clase = supabase.table(tablename).insert(data).execute()
-
+        try:
+            clase = supabase.table(tablename).insert(data).execute()
+        except Exception as e:
+            print(e)
+            
     def deleteData(tablename, id):
         clase = supabase.table(tablename).delete().eq('id', id).execute()
 

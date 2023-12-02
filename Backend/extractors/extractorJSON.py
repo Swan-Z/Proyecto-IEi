@@ -32,17 +32,20 @@ def json_a_json():
                 print(fila)
 
             if 'tipo' in fila:
-                if 'concertad' in fila['presentacionCorta'].lower() or fila['denLarga'].lower() or fila['tipo'].lower():
+                if 'concertad' in fila['presentacionCorta'].lower() or 'concertad' in fila['denLarga'].lower() or 'concertad' in fila['tipo'].lower():
                     fila['tipo'] = 'Concertado'
                 else:
                     if 'privado' in fila['tipo'].lower():
                         fila['tipo'] = 'Privado'
-                    if 'público' in fila['tipo'].lower():
+                    elif 'público' in fila['tipo'].lower():
                         fila['tipo'] = 'Público'
                     else:
                         print(fila['tipo'])
                         fila['tipo'] = 'Otros'
-
+            else:
+                fila['tipo'] = 'Otros'
+                print('No existe la clave tipo')
+                print(fila)
             if 'domcen' in fila:
                 fila['direccion'] = fila.pop('domcen')
             else:
@@ -128,19 +131,20 @@ def json_a_json():
                 'en_provincia': 'Murcia'
             }
 
-            #Repositorio.insertData('Centro_Educativo', datoCentro)
+            Repositorio.insertData('Localidad', datoLocalidad)
+            Repositorio.insertData('Centro_Educativo', datoCentro)
             
-            #Repositorio.insertData('Localidad', datoLocalidad)
+            
+
+
+def insertaProvincia():
+    datoProvincia = {
+        'codigo': '30',
+        'nombre': 'Murcia'
+    }
+    Repositorio.insertData('Provincia', datoProvincia)
 
 
 
-        datoProvincia = {
-            'codigo': '30',
-            'nombre': 'Murcia'        
-        }
-
-        Repositorio.insertData('Provincia', datoProvincia)
-
-
-          
+insertaProvincia()      
 json_a_json()
