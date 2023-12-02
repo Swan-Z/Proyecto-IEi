@@ -1,6 +1,12 @@
 import json
 import os
 import re
+import sys 
+
+ruta_backend = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.append(ruta_backend)
+
+from repositorio import *
 
 def json_a_json():
     datos = []
@@ -85,24 +91,25 @@ def json_a_json():
                 if 'lon' in fila['geo-referencia']:
                     fila['longitud'] = fila['geo-referencia'].pop('lon')
                 else:
-                    fila['longitud'] = None
+                    fila['lon'] = None
                     print('No existe la clave lon')
                 if 'lat' in fila['geo-referencia']:
                     fila['latitud'] = fila['geo-referencia'].pop('lat')
                 else:
                     fila['latitud'] = None
                     print('No existe la clave lat')
+            else: 
+                fila['longitud'] = None
+                fila['latitud'] = None
+                print('No existe la clave geo-referencia')
+            #-----------------------------------------------------------------
                     
             if 'loccen' in fila:
                 fila['localidad'] = fila.pop('loccen')
             else:
                 print('No existe la clave loccen')
                 print(fila)
-            if 'muncen' in fila:
-                fila['PRO.nombre'] = fila.pop('muncen')
-            else:
-                print('No existe la clave muncen')
-                print(fila)
+
 
             datoCentro = {
                 'nombre': fila['nombre'],
@@ -117,17 +124,23 @@ def json_a_json():
 
             datoLocalidad = {
                 'codigo': fila['codigo_postal'],
-                'nombre': fila['localidad']
+                'nombre': fila['localidad'],
+                'en_provincia': 'Murcia'
             }
 
-            datoProvincia = {
-                'codigo': fila['codigo_postal'],
-                'nombre': fila['PRO.nombre']          
-            }
+            #Repositorio.insertData('Centro_Educativo', datoCentro)
+            
+            #Repositorio.insertData('Localidad', datoLocalidad)
 
-            # datos.append(nuevo_dato)
 
-        # with open(rutaComNuevo, 'w', encoding='utf-8') as archivoNuevo:
-        #     json.dump(datos, archivoNuevo, indent=2, ensure_ascii=False)
 
+        datoProvincia = {
+            'codigo': '30',
+            'nombre': 'Murcia'        
+        }
+
+        Repositorio.insertData('Provincia', datoProvincia)
+
+
+          
 json_a_json()
