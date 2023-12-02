@@ -9,8 +9,6 @@ sys.path.append(ruta_backend)
 from repositorio import *
 
 def json_a_json():
-    datos = []
-    inserta = True
     directorio_actual = os.getcwd()
     rutaJSON = 'jsonResultFromWrapper/MUR.json'
     rutaNuevo = 'jsonResultFromWrapper/MUR_Nuevo.json'
@@ -22,13 +20,12 @@ def json_a_json():
     with open(rutaComJSON, 'r', encoding='utf-8') as archivo:
         lector_json = json.load(archivo)
         for fila in lector_json:
-            inserta = True
             # Renombrar claves si existen
             if 'dencen' in fila:
                 fila['nombre'] = fila.pop('dencen')
-            else:
-                inserta = False
-                print('No existe la clave dencen')
+            else:  
+                fila['nombre'] = None
+                print('No existe la clave dencen, por lo tanto esta fila no será insertada')
                 print(fila)
 
             if 'tipo' in fila:
@@ -40,7 +37,8 @@ def json_a_json():
                     elif 'público' in fila['tipo'].lower():
                         fila['tipo'] = 'Público'
                     else:
-                        print(fila['tipo'])
+                        print('No se ha podido determinar el tipo de centro')
+                        print(fila)
                         fila['tipo'] = 'Otros'
             else:
                 fila['tipo'] = 'Otros'
@@ -49,16 +47,12 @@ def json_a_json():
             if 'domcen' in fila:
                 fila['direccion'] = fila.pop('domcen')
             else:
-                inserta = False
-                print('No existe la dirección')
+                fila['direccion'] = None
+                print('No existe la dirección, por lo tanto esta fila no será insertada')
                 print(fila)
                 
             if 'cpcen' in fila:
                 fila['codigo_postal'] = fila.pop('cpcen')
-                #cp = fila['cpcen']
-                #fila['C_E.codigo_postal'] = str(cp).zfill(5) 
-                #fila['LOC.codigo'] = str(cp).zfill(5)
-                #fila['PRO.codigo'] = re.search(r'\d{2}', str(cp).zfill(5)).group()
             else:
                 fila['codigo_postal'] = None
                 print('No existe la clave cpcen')
@@ -68,17 +62,18 @@ def json_a_json():
                 if len(fila['telcen']) == 9:
                     fila['telefono'] = fila.pop('telcen')
                 else:
-                    print('Número major o minor que 9 dígits')
+                    print('Número con formato erroneo')
+                    print(fila)
                     fila['telefono'] = None
             else:
                 if 'telcen2' in fila:
                     if len(fila['telcen2']) == 9:
                         fila['telefono'] = fila.pop('telcen2')
                     else:
-                        print('Número major o minor que 9 dígits')
+                        print('Número con formato erroneo')
                         fila['telefono'] = None
-                # print('No existe la clave telcen')
                 else:
+                    print('No existe la clave telcen')
                     print(fila)
                     fila['telefono'] = None
                 
@@ -96,15 +91,18 @@ def json_a_json():
                 else:
                     fila['lon'] = None
                     print('No existe la clave lon')
+                    print(fila)
                 if 'lat' in fila['geo-referencia']:
                     fila['latitud'] = fila['geo-referencia'].pop('lat')
                 else:
                     fila['latitud'] = None
                     print('No existe la clave lat')
+                    print(fila)
             else: 
                 fila['longitud'] = None
                 fila['latitud'] = None
                 print('No existe la clave geo-referencia')
+                print(fila)
             #-----------------------------------------------------------------
                     
             if 'loccen' in fila:
@@ -112,6 +110,7 @@ def json_a_json():
             else:
                 print('No existe la clave loccen')
                 print(fila)
+                fila['localidad'] = None
 
 
             datoCentro = {
@@ -131,19 +130,16 @@ def json_a_json():
                 'en_provincia': 'Murcia'
             }
 
-            Repositorio.insertData('Localidad', datoLocalidad)
-            Repositorio.insertData('Centro_Educativo', datoCentro)
+            if datoCentro['nombre'] != None and datoCentro['direccion'] != None:
+                Repositorio.insertData('Localidad', datoLocalidad)
+                Repositorio.insertData('Centro_Educativo', datoCentro)
             
-            
-
-
 def insertaProvincia():
     datoProvincia = {
         'codigo': '30',
         'nombre': 'Murcia'
     }
     Repositorio.insertData('Provincia', datoProvincia)
-
 
 
 insertaProvincia()      
