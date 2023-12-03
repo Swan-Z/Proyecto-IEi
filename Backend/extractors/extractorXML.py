@@ -7,13 +7,23 @@ ruta_backend = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(ruta_backend)
 
 from repositorio import *
+# from wrappers.wrapperXML import *
 
-def xml_a_json():
+# def xml_a_json():
+#     directorio_actual = os.getcwd()
+#     rutaXMLOriginal = 'ficheroFuenteDatos/CAT.xml'
+#     rutaJSON = 'jsonResultFromWrapper/CAT.json'
+#     rutaComXML = os.path.abspath(os.path.join(directorio_actual, rutaXMLOriginal))
+#     rutaComJSON = os.path.abspath(os.path.join(directorio_actual, rutaJSON))
+#     wrapperXML_to_JSON(rutaComXML, rutaComJSON)
+    
+
+def json_a_BD():
     directorio_actual = os.getcwd()
     rutaJSON = 'jsonResultFromWrapper/CAT.json'
-    rutaNuevo = 'jsonResultFromWrapper/CAT_Nuevo.json'
+    # rutaNuevo = 'jsonResultFromWrapper/CAT_Nuevo.json'
     rutaComJSON = os.path.abspath(os.path.join(directorio_actual, rutaJSON))
-    rutaComNuevo = os.path.abspath(os.path.join(directorio_actual, rutaNuevo))
+    # rutaComNuevo = os.path.abspath(os.path.join(directorio_actual, rutaNuevo))
     
 
     with open(rutaComJSON, 'r', encoding='utf-8') as archivo:
@@ -137,6 +147,9 @@ def xml_a_json():
                 Repositorio.insertData('Provincia', datoProvincia)
                 Repositorio.insertData('Localidad', datoLocalidad)
                 Repositorio.insertData('Centro_Educativo', datoCentro)
+            else:
+                print(fila)
+                print('No ha insertado esta fila porque contiene atributos nulos que no pueden ser nulos')
 
-
-xml_a_json()
+# xml_a_json()
+json_a_BD()

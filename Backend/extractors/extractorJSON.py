@@ -11,9 +11,9 @@ from repositorio import *
 def json_a_json():
     directorio_actual = os.getcwd()
     rutaJSON = 'jsonResultFromWrapper/MUR.json'
-    rutaNuevo = 'jsonResultFromWrapper/MUR_Nuevo.json'
+    # rutaNuevo = 'jsonResultFromWrapper/MUR_Nuevo.json'
     rutaComJSON = os.path.abspath(os.path.join(directorio_actual, rutaJSON))
-    rutaComNuevo = os.path.abspath(os.path.join(directorio_actual, rutaNuevo))
+    # rutaComNuevo = os.path.abspath(os.path.join(directorio_actual, rutaNuevo))
     
 
     # Abrir el archivo JSON y leer los datos con la codificación 'utf-8'
@@ -133,6 +133,9 @@ def json_a_json():
             if datoCentro['nombre'] != None and datoCentro['direccion'] != None:
                 Repositorio.insertData('Localidad', datoLocalidad)
                 Repositorio.insertData('Centro_Educativo', datoCentro)
+            else:
+                print(fila)
+                print('No ha insertado esta fila porque contiene atributos nulos que no pueden ser nulos')
             
 def insertaProvincia():
     datoProvincia = {
