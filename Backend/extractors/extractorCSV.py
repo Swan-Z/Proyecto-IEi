@@ -110,10 +110,16 @@ def json_a_BD():
             }
             dir = str(fila['direccion']) + ", " + str(fila['loc.nombre']) + ", " + str(fila['codigo_postal'])
             print(dir)
+            # direcciones.append(dir)  para que sea más rápido con una ventana de buscador abierta continuament
             res = verificar_titulo(dir)
             print(res)
             datoCentro['longitud'] = res['longitud']
             datoCentro['latitud'] = res['latitud']
+            res = {
+                'longitud': datoCentro['longitud'],
+                'latitud': datoCentro['latitud']
+            }
+            
 
             datoLocalidad = {
                 'codigo': fila['loc.codigo'],
@@ -134,6 +140,16 @@ def json_a_BD():
                 print('No ha insertado esta fila porque contiene atributos nulos que no pueden ser nulos')
             
             datos_centro.append(datoCentro)
+
+        # res = verificar_titulo(direcciones)
+        # for i in res:
+        #     geo = {
+        #         'longitud': i['longitud'],
+        #         'latitud': i['latitud']
+        #     }
+        #     Repositorio.insertData('Centro_Educativo', geo)
+
+        
         
 
         with open(rutaComNuevo, 'w', encoding='utf-8') as archivoNuevo:
