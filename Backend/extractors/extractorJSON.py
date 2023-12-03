@@ -8,7 +8,7 @@ sys.path.append(ruta_backend)
 
 from repositorio import *
 
-def json_a_json():
+def json_a_BD():
     directorio_actual = os.getcwd()
     rutaJSON = 'jsonResultFromWrapper/MUR.json'
     # rutaNuevo = 'jsonResultFromWrapper/MUR_Nuevo.json'
@@ -146,4 +146,4 @@ def insertaProvincia():
 
 
 insertaProvincia()      
-json_a_json()
+json_a_BD()

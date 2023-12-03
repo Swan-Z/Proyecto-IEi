@@ -22,8 +22,8 @@ class SeleniumExample:
         """
         
         # pylint: disable=unexpected-keyword-arg
-        driver_path = 'path/to/chromedriver'
-        driver = webdriver.Chrome(executable_path=driver_path)
+        #driver_path = 'path/to/chromedriver'
+        driver = webdriver.Chrome()
          # pylint: enable=unexpected-keyword-arg
         driver.get("https://www.coordenadas-gps.com/")
         element = driver.find_element("id","address")
