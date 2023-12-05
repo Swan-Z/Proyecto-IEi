@@ -16,7 +16,14 @@ from repositorio import *
 #     rutaComXML = os.path.abspath(os.path.join(directorio_actual, rutaXMLOriginal))
 #     rutaComJSON = os.path.abspath(os.path.join(directorio_actual, rutaJSON))
 #     wrapperXML_to_JSON(rutaComXML, rutaComJSON)
-    
+class SequentialIDGenerator:
+    def __init__(self):
+        self.counter = 0
+
+    def generate_id(self):
+        self.counter += 1
+        return self.counter
+  
 
 def json_a_BD():
     directorio_actual = os.getcwd()
@@ -24,7 +31,7 @@ def json_a_BD():
     # rutaNuevo = 'jsonResultFromWrapper/CAT_Nuevo.json'
     rutaComJSON = os.path.abspath(os.path.join(directorio_actual, rutaJSON))
     # rutaComNuevo = os.path.abspath(os.path.join(directorio_actual, rutaNuevo))
-    
+    generator = SequentialIDGenerator()
 
     with open(rutaComJSON, 'r', encoding='utf-8') as archivo:
         lector_json = json.load(archivo)
@@ -138,7 +145,7 @@ def json_a_BD():
                 
 
             datoLocalidad = {
-                'codigo': fila['codigo_postal'],
+                'id': generator.generate_id(),
                 'nombre': fila['localidad'],
                 'en_provincia': fila['nombre_provincia']
             } 

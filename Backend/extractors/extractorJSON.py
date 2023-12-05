@@ -8,13 +8,21 @@ sys.path.append(ruta_backend)
 
 from repositorio import *
 
+class SequentialIDGenerator:
+    def __init__(self):
+        self.counter = 0
+
+    def generate_id(self):
+        self.counter += 1
+        return self.counter
+
 def json_a_BD():
     directorio_actual = os.getcwd()
     rutaJSON = 'jsonResultFromWrapper/MUR.json'
     # rutaNuevo = 'jsonResultFromWrapper/MUR_Nuevo.json'
     rutaComJSON = os.path.abspath(os.path.join(directorio_actual, rutaJSON))
     # rutaComNuevo = os.path.abspath(os.path.join(directorio_actual, rutaNuevo))
-    
+    generator = SequentialIDGenerator()
 
     # Abrir el archivo JSON y leer los datos con la codificación 'utf-8'
     with open(rutaComJSON, 'r', encoding='utf-8') as archivo:
@@ -125,7 +133,8 @@ def json_a_BD():
             }
 
             datoLocalidad = {
-                'codigo': fila['codigo_postal'],
+                # 'codigo': fila['codigo_postal'],
+                'id': generator.generate_id(),
                 'nombre': fila['localidad'],
                 'en_provincia': 'Murcia'
             }
@@ -136,7 +145,8 @@ def json_a_BD():
             else:
                 print(fila)
                 print('No ha insertado esta fila porque contiene atributos nulos que no pueden ser nulos')
-            
+
+
 def insertaProvincia():
     datoProvincia = {
         'codigo': '30',
