@@ -16,6 +16,13 @@ from seleniumPrueba import *
 #     rutaComCSV = os.path.abspath(os.path.join(directorio_actual, rutaCSVOriginal))
 #     rutaComJSON = os.path.abspath(os.path.join(directorio_actual, rutaJSON))
 #     wrapperXML_to_JSON(rutaComCSV, rutaComJSON)
+class SequentialIDGenerator:
+    def __init__(self):
+        self.counter = 0
+
+    def generate_id(self):
+        self.counter += 1
+        return self.counter
 
 def json_a_BD():
     datos_centro = []
@@ -27,6 +34,7 @@ def json_a_BD():
     rutaComJSON = os.path.abspath(os.path.join(directorio_actual, rutaJSON))
     rutaNuevo = 'jsonResultFromWrapper/CV_Nuevo.json'
     rutaComNuevo = os.path.abspath(os.path.join(directorio_actual, rutaNuevo))
+    generator = SequentialIDGenerator()
 
     with open(rutaComJSON, 'r', encoding='utf-8') as archivo:
         lector_json = json.load(archivo)
@@ -122,7 +130,7 @@ def json_a_BD():
             
 
             datoLocalidad = {
-                'codigo': fila['loc.codigo'],
+                'id': generator.generate_id(),
                 'nombre': fila['loc.nombre'],
                 'en_provincia': fila['pro.nombre']
             }
