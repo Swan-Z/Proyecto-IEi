@@ -1,16 +1,27 @@
+"""
+Descripción del propósito de tu script.
+Puedes añadir más detalles aquí si es necesario.
+"""
+import time
+import os
+import sys
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import time
-import os
-import sys
+from repositorio import *
+
 
 ruta_backend = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(ruta_backend)
-from repositorio import *
+
 
 def verificar_titulo(direccion):
+    """
+    Verifica el título de la página después de realizar una búsqueda.
+    Args: direccion (str): La dirección que se utilizará para la búsqueda.
+    Returns: dict: Un diccionario que contiene las coordenadas geográficas (latitud y longitud).
+    """
     #driver_path = 'path/to/chromedriver'
     # para que no se cierre la página
     # option = webdriver.ChromeOptions()
@@ -38,7 +49,7 @@ def verificar_titulo(direccion):
     res1 = longitude_element.get_attribute("value")
     res2 = latitude_element.get_attribute("value")
 
-    datoGeo = {
+    dato_geo = {
         'longitud': res1,
         'latitud': res2
     }
@@ -47,7 +58,7 @@ def verificar_titulo(direccion):
     # print('Soy longitude:' + res1)
     
     driver.quit()
-    return datoGeo
+    return dato_geo
     
 
     
