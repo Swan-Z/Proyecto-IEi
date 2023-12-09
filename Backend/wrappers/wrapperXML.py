@@ -5,8 +5,8 @@ import os
 #Los comentados es para probar directamente en este fichero
 #python wrappers/fichero.py
 # directorio_actual = os.getcwd()
-# rutaXML = 'ficheroFuenteDatos/CAT.xml'
-# rutaJSON = 'extractors/jsonResultFromWrapper/CAT.json'
+# rutaXML = 'ficheroFuenteDatos/CAT_demo.xml'
+# rutaJSON = 'jsonResultFromWrapper/CAT_demo.json'
 # rutaComXML = os.path.abspath(os.path.join(directorio_actual, rutaXML))
 # rutaComJSON = os.path.abspath(os.path.join(directorio_actual, rutaJSON))
 
