@@ -6,9 +6,10 @@ import logging
 
 ruta_backend = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(ruta_backend)
+logging.basicConfig(level=logging.WARNING)
 from repositorio import *
 from seleniumPrueba import *
-logging.basicConfig(level=logging.WARNING)
+
 
 class Colores:
     RESET = '\033[0m'
@@ -25,13 +26,6 @@ class Colores:
 #     rutaComCSV = os.path.abspath(os.path.join(directorio_actual, rutaCSVOriginal))
 #     rutaComJSON = os.path.abspath(os.path.join(directorio_actual, rutaJSON))
 #     wrapperXML_to_JSON(rutaComCSV, rutaComJSON)
-class SequentialIDGenerator:
-    def __init__(self):
-        self.counter = 0
-
-    def generate_id(self):
-        self.counter += 1
-        return self.counter
 
 def json_a_BD():
     datos_centro = []
@@ -48,11 +42,11 @@ def json_a_BD():
         lector_json = json.load(archivo)
 
         for fila in lector_json:
-            if 'DENOMINACION_GENERICA_ES' in fila and fila['DENOMINACION_GENERICA_ES'] is not None and fila['DENOMINACION_GENERICA_ES'] != '':
-                fila['nombre'] = fila.pop('DENOMINACION_GENERICA_ES')
+            if 'DENOMINACION' in fila and fila['DENOMINACION'] is not None and fila['DENOMINACION'] != '':
+                fila['nombre'] = fila.pop('DENOMINACION')
             else:
                 fila['nombre'] = None
-                print(Colores.ROJO + 'No existe la clave DENOMINACION_GENERICA_ES, por lo tanto esta fila no será insertada: ' + Colores.RESET)
+                print(Colores.ROJO + 'No existe la clave DENOMINACION, por lo tanto esta fila no será insertada: ' + Colores.RESET)
                 print(Colores.ROJO + str(fila) + Colores.RESET)
             
             if 'REGIMEN' in fila:

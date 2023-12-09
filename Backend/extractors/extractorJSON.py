@@ -18,13 +18,6 @@ class Colores:
 
 from repositorio import *
 
-class SequentialIDGenerator:
-    def __init__(self):
-        self.counter = 0
-
-    def generate_id(self):
-        self.counter += 1
-        return self.counter
 
 def json_a_BD():
     directorio_actual = os.getcwd()
