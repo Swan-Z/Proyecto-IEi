@@ -147,7 +147,7 @@ def json_a_BD():
                 'en_provincia': fila['nombre_provincia']
             } 
 
-            if datoCentro['nombre'] != None and datoCentro['direccion'] != None and datoCentro['longitud'] != None and datoCentro['latitud'] != None:
+            if datoCentro['nombre'] != None and datoCentro['direccion'] != None and datoCentro['longitud'] != None and datoCentro['latitud'] != None and datoCentro['codigo_postal'] != None:
                 Repositorio.insertData('Provincia', datoProvincia)
                 Repositorio.insertData('Localidad', datoLocalidad)
                 datoCentro['id_localidad'] = Repositorio.fetchDataByNames('Localidad', datoLocalidad['nombre'])[0]['id']
