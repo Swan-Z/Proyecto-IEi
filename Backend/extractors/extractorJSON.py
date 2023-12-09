@@ -32,7 +32,6 @@ def json_a_BD():
     # rutaNuevo = 'jsonResultFromWrapper/MUR_Nuevo.json'
     rutaComJSON = os.path.abspath(os.path.join(directorio_actual, rutaJSON))
     # rutaComNuevo = os.path.abspath(os.path.join(directorio_actual, rutaNuevo))
-    generator = SequentialIDGenerator()
 
     # Abrir el archivo JSON y leer los datos con la codificación 'utf-8'
     with open(rutaComJSON, 'r', encoding='utf-8') as archivo:
