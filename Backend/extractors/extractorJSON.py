@@ -2,9 +2,19 @@ import json
 import os
 import re
 import sys 
+import logging
 
 ruta_backend = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(ruta_backend)
+logging.basicConfig(level=logging.WARNING)
+
+
+class Colores:
+    RESET = '\033[0m'
+    ROJO = '\033[91m'
+    AMARILLO = '\033[93m'
+    AZUL = '\033[94m'
+    MAGENTA = '\033[95m'
 
 from repositorio import *
 
@@ -18,7 +28,7 @@ class SequentialIDGenerator:
 
 def json_a_BD():
     directorio_actual = os.getcwd()
-    rutaJSON = 'jsonResultFromWrapper/MUR.json'
+    rutaJSON = 'jsonResultFromWrapper/MUR_demo.json'
     # rutaNuevo = 'jsonResultFromWrapper/MUR_Nuevo.json'
     rutaComJSON = os.path.abspath(os.path.join(directorio_actual, rutaJSON))
     # rutaComNuevo = os.path.abspath(os.path.join(directorio_actual, rutaNuevo))
@@ -29,12 +39,12 @@ def json_a_BD():
         lector_json = json.load(archivo)
         for fila in lector_json:
             # Renombrar claves si existen
-            if 'dencen' in fila:
+            if 'dencen' in fila and fila['dencen'] is not None and fila['dencen'] != '':
                 fila['nombre'] = fila.pop('dencen')
             else:  
                 fila['nombre'] = None
-                print('No existe la clave dencen, por lo tanto esta fila no será insertada')
-                print(fila)
+                print(Colores.ROJO + 'No existe la clave dencen, por lo tanto esta fila no será insertada: ' + Colores.RESET)
+                print(Colores.ROJO + str(fila) + Colores.RESET)
 
             if 'tipo' in fila:
                 if 'concertad' in fila['presentacionCorta'].lower() or 'concertad' in fila['denLarga'].lower() or 'concertad' in fila['tipo'].lower():
@@ -45,81 +55,81 @@ def json_a_BD():
                     elif 'público' in fila['tipo'].lower():
                         fila['tipo'] = 'Público'
                     else:
-                        print('No se ha podido determinar el tipo de centro')
-                        print(fila)
+                        print(Colores.AMARILLO + 'No se ha podido determinar el tipo de centro: ' + Colores.RESET)
+                        print(Colores.AMARILLO + str(fila) + Colores.RESET)
                         fila['tipo'] = 'Otros'
             else:
                 fila['tipo'] = 'Otros'
-                print('No existe la clave tipo')
-                print(fila)
-            if 'domcen' in fila:
+                print(Colores.AMARILLO + 'No existe la clave tipo: ' + Colores.RESET)
+                print(Colores.AMARILLO + str(fila) + Colores.RESET)
+            if 'domcen' in fila and fila['domcen'] is not None and fila['domcen'] != '':
                 fila['direccion'] = fila.pop('domcen')
             else:
                 fila['direccion'] = None
-                print('No existe la dirección, por lo tanto esta fila no será insertada')
-                print(fila)
+                print(Colores.ROJO + 'No existe la dirección, por lo tanto esta fila no será insertada: '+ Colores.RESET)
+                print(Colores.ROJO + str(fila) + Colores.RESET)
                 
-            if 'cpcen' in fila:
+            if 'cpcen' in fila and fila['cpcen'] is not None and fila['cpcen'] != '':
                 fila['codigo_postal'] = fila.pop('cpcen')
             else:
                 fila['codigo_postal'] = None
-                print('No existe la clave cpcen')
-                print(fila)
+                print(Colores.ROJO + 'No existe la clave cpcen, por lo tanto esta fila no será insertada: ' + Colores.RESET)
+                print(Colores.ROJO + str(fila) + Colores.RESET)
                 
             if 'telcen' in fila:
                 if len(fila['telcen']) == 9:
                     fila['telefono'] = fila.pop('telcen')
                 else:
-                    print('Número con formato erroneo')
-                    print(fila)
+                    print(Colores.AMARILLO +'Número con formato erroneo: ' + Colores.RESET)
+                    print(Colores.AMARILLO + str(fila) + Colores.RESET)
                     fila['telefono'] = None
             else:
                 if 'telcen2' in fila:
                     if len(fila['telcen2']) == 9:
                         fila['telefono'] = fila.pop('telcen2')
                     else:
-                        print('Número con formato erroneo')
+                        print(Colores.AMARILLO +'Número con formato erroneo: ' + Colores.RESET)
+                        print(Colores.AMARILLO + str(fila) + Colores.RESET)
                         fila['telefono'] = None
                 else:
-                    print('No existe la clave telcen')
-                    print(fila)
+                    print(Colores.AMARILLO + 'No existe la clave telcen: ' + Colores.RESET)
+                    print(Colores.AMARILLO + str(fila) + Colores.RESET)
                     fila['telefono'] = None
                 
             if 'presentacionCorta' in fila:
                 fila['descripcion'] = fila.pop('presentacionCorta')
             else:
                 fila['descripcion'] = None
-                print('No existe la clave presentacionCorta')
-                print(fila)
+                print(Colores.AMARILLO + 'No existe la clave presentacionCorta: ' + Colores.RESET)
+                print(Colores.AMARILLO + str(fila) + Colores.RESET)
 
             # Mover datos de georeferencia si existen
             if 'geo-referencia' in fila:
-                if 'lon' in fila['geo-referencia']:
+                if 'lon' in fila['geo-referencia'] and fila['geo-referencia']['lon'] is not None and fila['geo-referencia']['lon'] != '':
                     fila['longitud'] = fila['geo-referencia'].pop('lon')
                 else:
                     fila['lon'] = None
-                    print('No existe la clave lon')
-                    print(fila)
-                if 'lat' in fila['geo-referencia']:
+                    print(Colores.ROJO + 'No existe la clave lon por lo tanto esta fila no será insertada: ' + Colores.RESET)
+                    print(Colores.ROJO + str(fila) + Colores.RESET)
+                if 'lat' in fila['geo-referencia'] and fila['geo-referencia']['lat'] is not None and fila['geo-referencia']['lat'] != '':
                     fila['latitud'] = fila['geo-referencia'].pop('lat')
                 else:
                     fila['latitud'] = None
-                    print('No existe la clave lat')
-                    print(fila)
+                    print(Colores.ROJO + 'No existe la clave lat por lo tanto esta fila no será insertada: ' + Colores.RESET)
+                    print(Colores.ROJO + str(fila) + Colores.RESET)
             else: 
                 fila['longitud'] = None
                 fila['latitud'] = None
-                print('No existe la clave geo-referencia')
-                print(fila)
+                print(Colores.ROJO + 'No existe la clave geo-referencia, por lo tanto esta fila no será insertada: ' + Colores.RESET)
+                print(Colores.ROJO + str(fila) + Colores.RESET)
             #-----------------------------------------------------------------
                     
-            if 'loccen' in fila:
+            if 'loccen' in fila and fila['loccen'] is not None and fila['loccen'] != '':
                 fila['localidad'] = fila.pop('loccen')
             else:
-                print('No existe la clave loccen')
-                print(fila)
+                print(Colores.ROJO + 'No existe la clave loccen, por lo tanto esta fila no será insertada: ' + Colores.RESET)
+                print(Colores.ROJO + str(fila) + Colores.RESET)
                 fila['localidad'] = None
-
 
             datoCentro = {
                 'nombre': fila['nombre'],
@@ -138,13 +148,13 @@ def json_a_BD():
                 'en_provincia': 'Murcia'
             }
 
-            if datoCentro['nombre'] != None and datoCentro['direccion'] != None:
+            if datoCentro['nombre'] and datoCentro['direccion'] and datoCentro['longitud'] and datoCentro['latitud'] and datoCentro['codigo_postal']:            
                 Repositorio.insertData('Localidad', datoLocalidad)
                 datoCentro['id_localidad'] = Repositorio.fetchDataByNames('Localidad', datoLocalidad['nombre'])[0]['id']
                 Repositorio.insertData('Centro_Educativo', datoCentro)
             else:
-                print(fila)
-                print('No ha insertado esta fila porque contiene atributos nulos que no pueden ser nulos')
+                print('')
+                
 
 
 def insertaProvincia():
