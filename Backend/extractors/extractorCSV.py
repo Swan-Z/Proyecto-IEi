@@ -44,7 +44,7 @@ def json_a_BD():
                 fila['nombre'] = fila.pop('DENOMINACION_GENERICA_ES')
             else:
                 fila['nombre'] = None
-                print('No existe la clave DENOMINACION_GENERICA_ES')
+                print('No existe la clave DENOMINACION_GENERICA_ES, por lo tanto esta fila no será insertada')
                 print(fila)
             
             if 'REGIMEN' in fila:
@@ -65,7 +65,7 @@ def json_a_BD():
                 direcciones.append(fila['direccion'])
             else:
                 fila['direccion'] = None
-                print('No existe la dirección')
+                print('No existe la dirección, por lo tanto esta fila no será insertada')
                 print(fila)
             if 'CODIGO_POSTAL' in fila:
                 cp = fila['CODIGO_POSTAL']

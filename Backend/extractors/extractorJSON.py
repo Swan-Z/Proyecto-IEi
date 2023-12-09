@@ -129,12 +129,11 @@ def json_a_BD():
                 'telefono': fila['telefono'],
                 'descripcion': fila['descripcion'],
                 'longitud': fila['longitud'],
-                'latitud': fila['latitud'],
+                'latitud': fila['latitud'],   
+                'id_localidad' : ''            
             }
 
             datoLocalidad = {
-                # 'codigo': fila['codigo_postal'],
-                'id': generator.generate_id(),
                 'nombre': fila['localidad'],
                 'en_provincia': 'Murcia'
             }
@@ -154,6 +153,10 @@ def insertaProvincia():
     }
     Repositorio.insertData('Provincia', datoProvincia)
 
+def pruebaFetch():
+    respuesta = Repositorio.fetchDataById('Localidad', 7)
+    print(respuesta)
 
-insertaProvincia()      
-json_a_BD()
+pruebaFetch()
+#insertaProvincia()      
+#json_a_BD()
