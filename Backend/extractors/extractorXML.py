@@ -96,13 +96,13 @@ def json_a_BD():
                     fila['longitud'] = fila['row'].pop('coordenades_geo_x')
             else:
                     fila['longitud'] = None
-                    print('No existe la clave longitud')
+                    print('No existe la clave longitud, por lo tanto esta fila no será insertada')
                     print(fila)
             if 'coordenades_geo_y' in fila['row']:
                     fila['latitud'] = fila['row'].pop('coordenades_geo_y')
             else:
                     fila['latitud'] = None
-                    print('No existe la clave latitud')
+                    print('No existe la clave latitud, por lo tanto esta fila no será insertada')
                     print(fila)
             #-----------------------------------------------------------------
             if 'nom_municipi' in fila['row']:
@@ -136,6 +136,7 @@ def json_a_BD():
                 'descripcion': fila['descripcion'],
                 'longitud': fila['longitud'],
                 'latitud': fila['latitud'],
+                'id_localidad' : ''
             }
 
             datoProvincia = {
@@ -145,14 +146,13 @@ def json_a_BD():
                 
 
             datoLocalidad = {
-                'id': generator.generate_id(),
                 'nombre': fila['localidad'],
                 'en_provincia': fila['nombre_provincia']
             } 
 
-            if datoCentro['nombre'] != None and datoCentro['direccion'] != None:
-                Repositorio.insertData('Provincia', datoProvincia)
+            if datoCentro['nombre'] != None and datoCentro['direccion'] != None and datoCentro['longitud'] != None and datoCentro['latitud'] != None:
                 Repositorio.insertData('Localidad', datoLocalidad)
+                datoCentro['id_localidad'] = Repositorio.fetchDataByNames('Localidad', datoLocalidad['nombre'])[0]['id']
                 Repositorio.insertData('Centro_Educativo', datoCentro)
             else:
                 print(fila)

@@ -140,6 +140,7 @@ def json_a_BD():
 
             if datoCentro['nombre'] != None and datoCentro['direccion'] != None:
                 Repositorio.insertData('Localidad', datoLocalidad)
+                datoCentro['id_localidad'] = Repositorio.fetchDataByNames('Localidad', datoLocalidad['nombre'])[0]['id']
                 Repositorio.insertData('Centro_Educativo', datoCentro)
             else:
                 print(fila)
@@ -153,10 +154,5 @@ def insertaProvincia():
     }
     Repositorio.insertData('Provincia', datoProvincia)
 
-def pruebaFetch():
-    respuesta = Repositorio.fetchDataById('Localidad', 7)
-    print(respuesta)
-
-pruebaFetch()
-#insertaProvincia()      
-#json_a_BD()
+insertaProvincia()      
+json_a_BD()

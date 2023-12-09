@@ -24,12 +24,9 @@ class Repositorio:
     def fetchDataById(tablename, id):
         respuesta = supabase.table(tablename).select('*').eq('id', id).execute()
         return respuesta.data
-    
-    def pruebaGetAll():
-        respuesta = supabase.table('Localidad').select('*').execute()
-        print(respuesta.data)
+    def fetchDataByNames(tablename, name):
+        respuesta = supabase.table(tablename).select('*').eq('nombre', name).execute()
         return respuesta.data
     
-    pruebaGetAll()
  
     

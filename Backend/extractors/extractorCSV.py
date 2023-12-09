@@ -114,7 +114,8 @@ def json_a_BD():
                 'telefono': fila['telefono'],
                 'descripcion': fila['descripcion'],
                 'longitud': None,
-                'latitud': None
+                'latitud': None,
+                'id_localidad' : ''
             }
             dir = str(fila['direccion']) + ", " + str(fila['loc.nombre']) + ", " + str(fila['codigo_postal'])
             print(dir)
@@ -130,7 +131,6 @@ def json_a_BD():
             
 
             datoLocalidad = {
-                'id': generator.generate_id(),
                 'nombre': fila['loc.nombre'],
                 'en_provincia': fila['pro.nombre']
             }
@@ -142,6 +142,7 @@ def json_a_BD():
             if datoCentro['nombre'] != None and datoCentro['direccion'] != None:
                 Repositorio.insertData('Provincia', datoProvincia)
                 Repositorio.insertData('Localidad', datoLocalidad)
+                datoCentro['id_localidad'] = Repositorio.fetchDataByNames('Localidad', datoLocalidad['nombre'])[0]['id']
                 Repositorio.insertData('Centro_Educativo', datoCentro) 
             else:
                 print(fila)
