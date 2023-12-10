@@ -37,6 +37,7 @@ def json_a_BD():
     rutaComJSON = os.path.abspath(os.path.join(directorio_actual, rutaJSON))
     rutaNuevo = 'jsonResultFromWrapper/CV_Nuevo.json'
     rutaComNuevo = os.path.abspath(os.path.join(directorio_actual, rutaNuevo))
+    driver = inicializar_driver()
 
     with open(rutaComJSON, 'r', encoding='utf-8') as archivo:
         lector_json = json.load(archivo)
@@ -123,14 +124,10 @@ def json_a_BD():
             dir = str(fila['direccion']) + ", " + str(fila['loc.nombre']) + ", " + str(fila['codigo_postal'])
             print(dir)
             # direcciones.append(dir)  para que sea más rápido con una ventana de buscador abierta continuament
-            res = verificar_titulo(dir)
+            res = verificar_titulo(dir, driver)
             print(res)
             datoCentro['longitud'] = res['longitud']
             datoCentro['latitud'] = res['latitud']
-            res = {
-                'longitud': datoCentro['longitud'],
-                'latitud': datoCentro['latitud']
-            }
             
 
             datoLocalidad = {
