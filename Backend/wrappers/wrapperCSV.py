@@ -7,7 +7,7 @@ rutaJSON = 'jsonResultFromWrapper/CV.json'
 rutaComCSV = os.path.abspath(os.path.join(directorio_actual, rutaCSV))
 rutaComJSON = os.path.abspath(os.path.join(directorio_actual, rutaJSON))
 
-def CSV_to_JSON(pathCSV, pathJSON):
+def wrapperCSV_to_JSON(pathCSV, pathJSON):
     csv = pd.read_csv(pathCSV, delimiter=';')
     jsonS = csv.to_json(orient='records', indent=2, force_ascii=False)
     

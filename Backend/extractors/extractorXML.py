@@ -7,15 +7,15 @@ ruta_backend = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(ruta_backend)
 
 from repositorio import *
-# from wrappers.wrapperXML import *
+from wrappers.wrapperXML import *
 
-# def xml_a_json():
-#     directorio_actual = os.getcwd()
-#     rutaXMLOriginal = 'ficheroFuenteDatos/CAT.xml'
-#     rutaJSON = 'jsonResultFromWrapper/CAT.json'
-#     rutaComXML = os.path.abspath(os.path.join(directorio_actual, rutaXMLOriginal))
-#     rutaComJSON = os.path.abspath(os.path.join(directorio_actual, rutaJSON))
-#     wrapperXML_to_JSON(rutaComXML, rutaComJSON)
+def xml_a_json():
+    directorio_actual = os.getcwd()
+    rutaXMLOriginal = 'ficheroFuenteDatos/CAT_demo.xml'
+    rutaJSON = 'jsonResultFromWrapper/CAT_demo.json'
+    rutaComXML = os.path.abspath(os.path.join(directorio_actual, rutaXMLOriginal))
+    rutaComJSON = os.path.abspath(os.path.join(directorio_actual, rutaJSON))
+    wrapperXML_to_JSON(rutaComXML, rutaComJSON)
 class SequentialIDGenerator:
     def __init__(self):
         self.counter = 0
@@ -27,7 +27,7 @@ class SequentialIDGenerator:
 
 def json_a_BD():
     directorio_actual = os.getcwd()
-    rutaJSON = 'jsonResultFromWrapper/CAT.json'
+    rutaJSON = 'jsonResultFromWrapper/CAT_demo.json'
     # rutaNuevo = 'jsonResultFromWrapper/CAT_Nuevo.json'
     rutaComJSON = os.path.abspath(os.path.join(directorio_actual, rutaJSON))
     # rutaComNuevo = os.path.abspath(os.path.join(directorio_actual, rutaNuevo))
@@ -158,5 +158,5 @@ def json_a_BD():
                 print(fila)
                 print('No ha insertado esta fila porque contiene atributos nulos que no pueden ser nulos')
 
-# xml_a_json()
+xml_a_json()
 json_a_BD()

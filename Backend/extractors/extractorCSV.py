@@ -7,15 +7,16 @@ ruta_backend = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(ruta_backend)
 from repositorio import *
 from seleniumPrueba import *
-# from wrappers.wrapperXML import *
+from wrappers.wrapperCSV import *
 
-# def csv_a_json():
-#     directorio_actual = os.getcwd()
-#     rutaCSVOriginal = 'ficheroFuenteDatos/CV.csv'
-#     rutaJSON = 'jsonResultFromWrapper/CV.json'
-#     rutaComCSV = os.path.abspath(os.path.join(directorio_actual, rutaCSVOriginal))
-#     rutaComJSON = os.path.abspath(os.path.join(directorio_actual, rutaJSON))
-#     wrapperXML_to_JSON(rutaComCSV, rutaComJSON)
+def csv_a_json():
+    directorio_actual = os.getcwd()
+    rutaCSVOriginal = 'ficheroFuenteDatos/CV_demo.csv'
+    rutaJSON = 'jsonResultFromWrapper/CV_demo.json'
+    rutaComCSV = os.path.abspath(os.path.join(directorio_actual, rutaCSVOriginal))
+    rutaComJSON = os.path.abspath(os.path.join(directorio_actual, rutaJSON))
+    wrapperCSV_to_JSON(rutaComCSV, rutaComJSON)
+
 class SequentialIDGenerator:
     def __init__(self):
         self.counter = 0
@@ -155,13 +156,10 @@ def json_a_BD():
         #         'longitud': i['longitud'],
         #         'latitud': i['latitud']
         #     }
-        #     Repositorio.insertData('Centro_Educativo', geo)
-
-        
-        
+        #     Repositorio.insertData('Centro_Educativo', geo)  
 
         with open(rutaComNuevo, 'w', encoding='utf-8') as archivoNuevo:
             json.dump(datos_centro, archivoNuevo, indent=2, ensure_ascii=False)
         
-# csv_a_json()
+csv_a_json()
 json_a_BD()
