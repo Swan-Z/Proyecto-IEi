@@ -161,5 +161,5 @@ def json_a_BD():
         with open(rutaComNuevo, 'w', encoding='utf-8') as archivoNuevo:
             json.dump(datos_centro, archivoNuevo, indent=2, ensure_ascii=False)
         
-csv_a_json()
+#csv_a_json()
 json_a_BD()

@@ -155,5 +155,5 @@ def json_a_BD():
             else:
                 print('')
 
-xml_a_json()
+#xml_a_json()
 json_a_BD()
