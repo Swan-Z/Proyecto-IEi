@@ -7,7 +7,7 @@ supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 class Repositorio:
     def fetchData(tablename):
         usuarios = supabase.table(tablename).select().execute()
-        return jsonify(usuarios)
+        return usuarios
     
     def insertData(tablename, data):
         try:
@@ -22,5 +22,11 @@ class Repositorio:
         clase = supabase.table(tablename).update(data).eq('id', id).execute()
 
     def fetchDataById(tablename, id):
-        usuarios = supabase.table(tablename).select().eq('id', id).execute()
-        return jsonify(usuarios)
+        respuesta = supabase.table(tablename).select('*').eq('id', id).execute()
+        return respuesta.data
+    def fetchDataByNames(tablename, name):
+        respuesta = supabase.table(tablename).select('*').eq('nombre', name).execute()
+        return respuesta.data
+    
+ 
+    

@@ -2,28 +2,30 @@ import json
 import os
 import re  
 import sys 
+import logging
 
 ruta_backend = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(ruta_backend)
+logging.basicConfig(level=logging.WARNING)
 from repositorio import *
 from seleniumPrueba import *
-from wrappers.wrapperCSV import *
 
-def csv_a_json():
-    directorio_actual = os.getcwd()
-    rutaCSVOriginal = 'ficheroFuenteDatos/CV_demo.csv'
-    rutaJSON = 'jsonResultFromWrapper/CV_demo.json'
-    rutaComCSV = os.path.abspath(os.path.join(directorio_actual, rutaCSVOriginal))
-    rutaComJSON = os.path.abspath(os.path.join(directorio_actual, rutaJSON))
-    wrapperCSV_to_JSON(rutaComCSV, rutaComJSON)
 
-class SequentialIDGenerator:
-    def __init__(self):
-        self.counter = 0
+class Colores:
+    RESET = '\033[0m'
+    ROJO = '\033[91m'
+    AMARILLO = '\033[93m'
+    AZUL = '\033[94m'
+    MAGENTA = '\033[95m'
+# from wrappers.wrapperXML import *
 
-    def generate_id(self):
-        self.counter += 1
-        return self.counter
+# def csv_a_json():
+#     directorio_actual = os.getcwd()
+#     rutaCSVOriginal = 'ficheroFuenteDatos/CV.csv'
+#     rutaJSON = 'jsonResultFromWrapper/CV.json'
+#     rutaComCSV = os.path.abspath(os.path.join(directorio_actual, rutaCSVOriginal))
+#     rutaComJSON = os.path.abspath(os.path.join(directorio_actual, rutaJSON))
+#     wrapperXML_to_JSON(rutaComCSV, rutaComJSON)
 
 def json_a_BD():
     datos_centro = []
@@ -31,22 +33,21 @@ def json_a_BD():
     datos_provincia = []
     direcciones = []
     directorio_actual = os.getcwd()
-    rutaJSON = 'jsonResultFromWrapper/CV.json'
+    rutaJSON = 'jsonResultFromWrapper/CV_demo.json'
     rutaComJSON = os.path.abspath(os.path.join(directorio_actual, rutaJSON))
     rutaNuevo = 'jsonResultFromWrapper/CV_Nuevo.json'
     rutaComNuevo = os.path.abspath(os.path.join(directorio_actual, rutaNuevo))
-    generator = SequentialIDGenerator()
 
     with open(rutaComJSON, 'r', encoding='utf-8') as archivo:
         lector_json = json.load(archivo)
 
         for fila in lector_json:
-            if 'DENOMINACION_GENERICA_ES' in fila:
-                fila['nombre'] = fila.pop('DENOMINACION_GENERICA_ES')
+            if 'DENOMINACION' in fila and fila['DENOMINACION'] is not None and fila['DENOMINACION'] != '':
+                fila['nombre'] = fila.pop('DENOMINACION')
             else:
                 fila['nombre'] = None
-                print('No existe la clave DENOMINACION_GENERICA_ES')
-                print(fila)
+                print(Colores.ROJO + 'No existe la clave DENOMINACION, por lo tanto esta fila no será insertada: ' + Colores.RESET)
+                print(Colores.ROJO + str(fila) + Colores.RESET)
             
             if 'REGIMEN' in fila:
                 if fila['REGIMEN'] == 'PRIV.':
@@ -59,52 +60,53 @@ def json_a_BD():
                     fila['tipo'] = 'Otros'
             else:
                 fila['tipo'] = 'Otros'
-                print('No detecta el tipo')
-                print(fila) 
+                print(Colores.AMARILLO + 'No se ha podido determinar el tipo de centro: ' + Colores.RESET)
+                print(Colores.AMARILLO + str(fila) + Colores.RESET)
             if 'TIPO_VIA' or 'DIRECCION' or 'NUMERO' in fila:
                 fila['direccion'] = str(fila.pop('TIPO_VIA')) + " " + str(fila.pop('DIRECCION')) + ", " + str(fila.pop('NUMERO'))
                 direcciones.append(fila['direccion'])
             else:
                 fila['direccion'] = None
-                print('No existe la dirección')
-                print(fila)
-            if 'CODIGO_POSTAL' in fila:
+                print(Colores.ROJO + 'No existe la dirección, por lo tanto esta fila no será insertada: '+ Colores.RESET)
+                print(Colores.ROJO + str(fila) + Colores.RESET)
+            if 'CODIGO_POSTAL' in fila and fila['CODIGO_POSTAL'] is not None and fila['CODIGO_POSTAL'] != '':
                 cp = fila['CODIGO_POSTAL']
                 fila['codigo_postal'] = str(cp).zfill(5)  #añadir 0 por delante
                 fila['loc.codigo'] = str(cp).zfill(5)
                 fila['pro.codigo'] = re.search(r'\d{2}', str(cp).zfill(5)).group()
             else:
                 fila['codigo_postal'] = None
-                print('No existe la clave CODIGO_POSTAL')
-                print(fila)
+                print(Colores.ROJO + 'No existe la clave CODIGO_POSTAL, por lo tanto esta fila no será insertada: ' + Colores.RESET)
+                print(Colores.ROJO + str(fila) + Colores.RESET)
             if 'TELEFONO' in fila and fila['TELEFONO'] != None:
                 if len(str(int(fila['TELEFONO']))) == 9:
                     fila['telefono'] = int(fila.pop('TELEFONO'))
                 else:
-                    print('Número mayor o menor que 9 dígitos')
+                    print(Colores.AMARILLO +'Número con formato erroneo: ' + Colores.RESET)
+                    print(Colores.AMARILLO + str(fila) + Colores.RESET)
                     fila['telefono'] = None
             else:
                 fila['telefono'] = None
-                print('No existe la clave TELEFONO')
-                print(fila)
+                print(Colores.AMARILLO + 'No existe la clave TELEFONO: ' + Colores.RESET)
+                print(Colores.AMARILLO + str(fila) + Colores.RESET)
             if 'URL_ES' in fila:
                 fila['descripcion'] = fila.pop('URL_ES')
             else:
                 fila['descripcion'] = None
-                print('No existe la clave URL_ES')
-                print(fila)
-            if 'LOCALIDAD' in fila:
+                print(Colores.AMARILLO + 'No existe la clave URL_ES: ' + Colores.RESET)
+                print(Colores.AMARILLO + str(fila) + Colores.RESET)
+            if 'LOCALIDAD' in fila and fila['LOCALIDAD'] is not None and fila['LOCALIDAD'] != '':
                 fila['loc.nombre'] = fila.pop('LOCALIDAD')
             else:
                 fila['loc.nombre'] = None
-                print('No existe la LOCALIDAD')
-                print(fila)
-            if 'PROVINCIA' in fila:
+                print(Colores.ROJO + 'No existe la clave LOCALIDAD, por lo tanto esta fila no será insertada: ' + Colores.RESET)
+                print(Colores.ROJO + str(fila) + Colores.RESET)
+            if 'PROVINCIA' in fila and fila['PROVINCIA'] is not None and fila['PROVINCIA'] != '':
                 fila['pro.nombre'] = fila.pop('PROVINCIA')
             else:
                 fila['pro.nombre'] = None
-                print('No existe la PROVINCIA')
-                print(fila)
+                print(Colores.ROJO + 'No existe la clave PROVINCIA, por lo tanto esta fila no será insertada: ' + Colores.RESET)
+                print(Colores.ROJO + str(fila) + Colores.RESET)
     
 
             datoCentro = {
@@ -115,7 +117,8 @@ def json_a_BD():
                 'telefono': fila['telefono'],
                 'descripcion': fila['descripcion'],
                 'longitud': None,
-                'latitud': None
+                'latitud': None,
+                'id_localidad' : ''
             }
             dir = str(fila['direccion']) + ", " + str(fila['loc.nombre']) + ", " + str(fila['codigo_postal'])
             print(dir)
@@ -131,7 +134,6 @@ def json_a_BD():
             
 
             datoLocalidad = {
-                'id': generator.generate_id(),
                 'nombre': fila['loc.nombre'],
                 'en_provincia': fila['pro.nombre']
             }
@@ -140,13 +142,14 @@ def json_a_BD():
                 'codigo': fila['pro.codigo'],
                 'nombre': fila['pro.nombre'],
             }
-            if datoCentro['nombre'] != None and datoCentro['direccion'] != None:
+
+            if datoCentro['nombre'] and datoCentro['direccion'] and datoCentro['longitud'] and datoCentro['latitud'] and datoCentro['codigo_postal']:
                 Repositorio.insertData('Provincia', datoProvincia)
                 Repositorio.insertData('Localidad', datoLocalidad)
+                datoCentro['id_localidad'] = Repositorio.fetchDataByNames('Localidad', datoLocalidad['nombre'])[0]['id']
                 Repositorio.insertData('Centro_Educativo', datoCentro) 
             else:
-                print(fila)
-                print('No ha insertado esta fila porque contiene atributos nulos que no pueden ser nulos')
+                print('')
             
             datos_centro.append(datoCentro)
 
