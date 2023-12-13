@@ -38,13 +38,13 @@ def json_a_BD():
                 print(Colores.ROJO + 'No existe la clave dencen, por lo tanto esta fila no será insertada: ' + Colores.RESET)
                 print(Colores.ROJO + str(fila) + Colores.RESET)
 
-            if 'tipo' in fila:
-                if 'concertad' in fila['presentacionCorta'].lower() or 'concertad' in fila['denLarga'].lower() or 'concertad' in fila['tipo'].lower():
+            if 'titularidad' in fila:
+                if 'C' in fila['titularidad']:
                     fila['tipo'] = 'Concertado'
                 else:
-                    if 'privado' in fila['tipo'].lower():
+                    if 'N' in fila['titularidad']:
                         fila['tipo'] = 'Privado'
-                    elif 'público' in fila['tipo'].lower():
+                    elif 'P' in fila['titularidad']:
                         fila['tipo'] = 'Público'
                     else:
                         print(Colores.AMARILLO + 'No se ha podido determinar el tipo de centro: ' + Colores.RESET)
