@@ -5,6 +5,7 @@ class VentanaBusqueda:
         self.master = master
         self.ventana_busqueda = tk.Toplevel(self.master)
         self.ventana_busqueda.title("API de búsqueda")
+        self.ventana_busqueda.geometry("900x700")
 
         self.textfield = tk.Entry(self.ventana_busqueda)
         self.textfield.pack(pady=10)
