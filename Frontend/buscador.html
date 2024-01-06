@@ -68,24 +68,38 @@
         console.log("Provincia:", provincia);
         console.log("Tipo:", tipo);
 
-        // Construir la URL de la API con los parámetros de búsqueda
-        const url = `https://api.ejemplo.com/buscar?localidad=${localidad}&codigo_postal=${codigoPostal}&provincia=${provincia}&tipo=${tipo}`;
+         // Configuración de Supabase
+        const supabaseUrl = 'https://wxohstsphwlwjzsisprz.supabase.co'
+        const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind4b2hzdHNwaHdsd2p6c2lzcHJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTc2MzAwMDgsImV4cCI6MjAxMzIwNjAwOH0.NsICQc-sZFZKwYZpzD6pjXja7q4oWR_m8TXMFndGumQ"
+        const centroEducativotable = "Centro_Educativo"; 
+        const localidadTable = "Localidad";
 
-        // Realizar la solicitud a la API
-        fetch(url)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`Error al realizar la búsqueda. Código de estado: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(resultado => {
-                // La solicitud fue exitosa, puedes manejar la respuesta JSON aquí
-                alert(`La búsqueda fue exitosa. Resultado: ${JSON.stringify(resultado)}`);
-            })
-            .catch(error => {
-                alert(`Error al realizar la búsqueda: ${error.message}`);
-            });
+        // Construir la URL de la API con los parámetros de búsqueda
+        const urlParams = new URLSearchParams({
+            localidad: localidad,
+            codigo_postal: codigoPostal,
+            provincia: provincia,
+            tipo: tipo
+        });
+
+        const apiUrl = `${supabaseUrl}/rest/v1/${tableName}?${urlParams}`;
+
+        // Realizar la solicitud GET a la API de Supabase
+        fetch(apiUrl, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'apikey': supabaseKey  // Añadir tu clave API como encabezado
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Manipular los datos obtenidos de Supabase
+            console.log(data);
+        })
+        .catch(error => {
+            console.error('Error al realizar la consulta a Supabase:', error);
+        });
     }
 </script>
 
