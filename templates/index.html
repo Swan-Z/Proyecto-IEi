@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Localizador de Coordenadas</title>
+</head>
+<body>
+    <h1>Localizador de Coordenadas</h1>
+    <form action="/search" method="post">
+        <label for="location_name">Nombre del lugar:</label>
+        <input type="text" id="location_name" name="location_name" required>
+        <br>
+        <label for="lat">Latitud:</label>
+        <input type="number" step="any" id="lat" name="lat" required>
+        <br>
+        <label for="lon">Longitud:</label>
+        <input type="number" step="any" id="lon" name="lon" required>
+        <br>
+        <button type="submit">Agregar Ubicación</button>
+    </form>
+
+    {% if locations %}
+        <h2>Ubicaciones agregadas:</h2>
+        <ul>
+            {% for loc in locations %}
+                <li>{{ loc.name }} (Latitud: {{ loc.lat }}, Longitud: {{ loc.lon }})</li>
+            {% endfor %}
+        </ul>
+        {{ map_html | safe }}
+    {% endif %}
+
+    {% if error_message %}
+        <p>{{ error_message }}</p>
+    {% endif %}
+</body>
+</html>
