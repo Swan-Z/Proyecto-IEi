@@ -27,7 +27,7 @@
 <div>
     <label for="tipo">Tipo:</label>
     <select id="tipo">
-        <option value="Publico">Público</option>
+        <option value="Público">Público</option>
         <option value="Privado">Privado</option>
         <option value="Concertado">Concertado</option>
         <option value="Otro">Otro</option>
@@ -71,8 +71,8 @@
          // Configuración de Supabase
         const supabaseUrl = 'https://wxohstsphwlwjzsisprz.supabase.co'
         const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind4b2hzdHNwaHdsd2p6c2lzcHJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTc2MzAwMDgsImV4cCI6MjAxMzIwNjAwOH0.NsICQc-sZFZKwYZpzD6pjXja7q4oWR_m8TXMFndGumQ"
-        const centroEducativotable = "Centro_Educativo"; 
-        const localidadTable = "Localidad";
+        const centroEducativoTable = "centro_educativo"; 
+        const localidadTable = "localidad";
 
         // Construir la URL de la API con los parámetros de búsqueda
         const urlParams = new URLSearchParams({
@@ -82,8 +82,18 @@
             tipo: tipo
         });
 
-        const apiUrl = `${supabaseUrl}/rest/v1/${tableName}?${urlParams}`;
+        const sqlQuery = `
+            SELECT ce.*
+            FROM ${centroEducativoTable} ce
+            JOIN ${localidadTable} l ON ce.id_localidad = l.id
+            WHERE l.en_provincia = '${provincia}'
+                AND l.nombre = '${localidad}'
+                AND ce.codigo_postal = '${codigoPostal}'
+                AND ce.tipo = '${tipo}';
+            `;
 
+        // Construir la URL de la API de Supabase para consultas SQL
+        const apiUrl = `${supabaseUrl}/rest/v1/query?select=${encodeURIComponent(sqlQuery)}`;
         // Realizar la solicitud GET a la API de Supabase
         fetch(apiUrl, {
             method: 'GET',
