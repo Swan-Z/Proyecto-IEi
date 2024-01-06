@@ -75,13 +75,13 @@ class BuscadorCentros:
         return localidad, codigo_postal, provincia, tipo
 
     def cancelar(self):
-        localidad, codigo_postal, provincia, tipo = self.obtener_valores()
-        # Añadir cualquier lógica necesaria para cancelar aquí
+        # Borra los textos de los Entry
+        self.entry_localidad.delete(0, tk.END)
+        self.entry_codigo_postal.delete(0, tk.END)
+        self.entry_provincia.delete(0, tk.END)
+        self.entry_tipo.set("")  # Borra la selección del Combobox
+
         print("Cancelando...")
-        print("Localidad:", localidad)
-        print("Código Postal:", codigo_postal)
-        print("Provincia:", provincia)
-        print("Tipo:", tipo)
 
     def buscar(self):
         localidad, codigo_postal, provincia, tipo = self.obtener_valores()
