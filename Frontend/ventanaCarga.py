@@ -5,7 +5,7 @@ class VentanaCarga:
         self.master = master
         self.ventana_carga = tk.Toplevel(master)
         self.ventana_carga.title("API de carga")
-        self.ventana_carga.geometry("900x700")
+        self.ventana_carga.geometry("700x500")
 
         self.titulo = tk.Label(self.ventana_carga, text="Buscador de centros educativos", font=("Arial",20))
         self.titulo.pack(pady=(100,40))
