@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+import requests
 
 class BuscadorCentros:
     def __init__(self, root):
@@ -91,6 +92,23 @@ class BuscadorCentros:
         print("Código Postal:", codigo_postal)
         print("Provincia:", provincia)
         print("Tipo:", tipo)
+
+        # Construir la URL de la API con los parámetros de búsqueda
+        url = f"https://api.ejemplo.com/buscar?localidad={localidad}&codigo_postal={codigo_postal}&provincia={provincia}&tipo={tipo}"
+
+        try:
+            # Realizar la solicitud a la API
+            response = requests.get(url)
+
+            # Verificar el código de estado de la respuesta
+            if response.status_code == 200:
+                # La solicitud fue exitosa, puedes manejar la respuesta JSON aquí
+                resultado = response.json()
+                messagebox.showinfo("Resultado", f"La búsqueda fue exitosa. Resultado: {resultado}")
+            else:
+                messagebox.showerror("Error", f"Error al realizar la búsqueda. Código de estado: {response.status_code}")
+        except Exception as e:
+            messagebox.showerror("Error", f"Error al realizar la búsqueda: {str(e)}")
 
 if __name__ == "__main__":
     root = tk.Tk()

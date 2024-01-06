@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscador de centros educativos</title>
+</head>
+<body>
+
+<h1>Buscador de centros educativos</h1>
+
+<div>
+    <label for="localidad">Localidad:</label>
+    <input type="text" id="localidad" />
+</div>
+
+<div>
+    <label for="codigoPostal">Código Postal:</label>
+    <input type="text" id="codigoPostal" />
+</div>
+
+<div>
+    <label for="provincia">Provincia:</label>
+    <input type="text" id="provincia" />
+</div>
+
+<div>
+    <label for="tipo">Tipo:</label>
+    <select id="tipo">
+        <option value="Publico">Público</option>
+        <option value="Privado">Privado</option>
+        <option value="Concertado">Concertado</option>
+        <option value="Otro">Otro</option>
+    </select>
+</div>
+
+<div>
+    <button onclick="cancelar()">Cancelar</button>
+    <button onclick="buscar()">Buscar</button>
+</div>
+
+<script>
+    function obtenerValores() {
+        const localidad = document.getElementById("localidad").value;
+        const codigoPostal = document.getElementById("codigoPostal").value;
+        const provincia = document.getElementById("provincia").value;
+        const tipo = document.getElementById("tipo").value;
+
+        return { localidad, codigoPostal, provincia, tipo };
+    }
+
+    function cancelar() {
+        document.getElementById("localidad").value = "";
+        document.getElementById("codigoPostal").value = "";
+        document.getElementById("provincia").value = "";
+        document.getElementById("tipo").value = "";
+
+        console.log("Cancelando...");
+    }
+
+    function buscar() {
+        const { localidad, codigoPostal, provincia, tipo } = obtenerValores();
+
+        // Añadir cualquier lógica necesaria para buscar aquí
+        console.log("Buscando...");
+        console.log("Localidad:", localidad);
+        console.log("Código Postal:", codigoPostal);
+        console.log("Provincia:", provincia);
+        console.log("Tipo:", tipo);
+
+        // Construir la URL de la API con los parámetros de búsqueda
+        const url = `https://api.ejemplo.com/buscar?localidad=${localidad}&codigo_postal=${codigoPostal}&provincia=${provincia}&tipo=${tipo}`;
+
+        // Realizar la solicitud a la API
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Error al realizar la búsqueda. Código de estado: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(resultado => {
+                // La solicitud fue exitosa, puedes manejar la respuesta JSON aquí
+                alert(`La búsqueda fue exitosa. Resultado: ${JSON.stringify(resultado)}`);
+            })
+            .catch(error => {
+                alert(`Error al realizar la búsqueda: ${error.message}`);
+            });
+    }
+</script>
+
+</body>
+</html>

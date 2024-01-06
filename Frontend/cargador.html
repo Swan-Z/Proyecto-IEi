@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interfaz de carga de datos</title>
+    <style>
+        /* Estilos opcionales para mejorar la apariencia */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        button {
+            margin-top: 10px;
+        }
+
+        #resultados {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Carga de almacen de datos</h1>
+
+<label for="fuente">Seleccionar fuente:</label>
+
+<!-- Checkboxes para las opciones -->
+<input type="checkbox" id="selectAll" />
+<label for="selectAll">Seleccionar todas</label>
+
+<input type="checkbox" id="murcia" />
+<label for="murcia">Murcia</label>
+
+<input type="checkbox" id="comunidadValenciana" />
+<label for="comunidadValenciana">Comunidad Valenciana</label>
+
+<input type="checkbox" id="cataluna" />
+<label for="cataluna">Cataluña</label>
+
+<!-- Botones de cancelar y cargar -->
+<button onclick="cancelar()">Cancelar</button>
+<button onclick="cargarDatos()">Cargar</button>
+
+<!-- Resultados de la carga -->
+<h2>Resultados de la carga:</h2>
+
+<!-- Contenedor para mostrar los resultados -->
+<div id="resultados"></div>
+
+<script>
+    // Función para cargar datos
+    function cargarDatos() {
+        // Lógica para cargar los datos desde la fuente seleccionada
+        // En este ejemplo, simplemente agregamos texto a la lista
+        const resultados = ["Dato 1", "Dato 2", "Dato 3"];
+
+        // Limpiar el contenedor antes de agregar los nuevos datos
+        document.getElementById('resultados').innerHTML = '';
+
+        // Mostrar los resultados en el contenedor
+        resultados.forEach(resultado => {
+            const labelResultado = document.createElement('label');
+            labelResultado.textContent = resultado;
+            document.getElementById('resultados').appendChild(labelResultado);
+        });
+    }
+
+    // Función para cancelar la operación
+    function cancelar() {
+        // Lógica para cancelar la operación
+    }
+
+    // Manejar la funcionalidad de "Seleccionar todas"
+    document.getElementById('selectAll').addEventListener('change', function() {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = this.checked;
+        });
+    });
+</script>
+
+</body>
+</html>
