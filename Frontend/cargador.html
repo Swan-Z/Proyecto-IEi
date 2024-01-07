@@ -46,7 +46,7 @@
 
 <!-- Botones de cancelar y cargar -->
 <button onclick="cancelar()">Cancelar</button>
-<button onclick="cargarDatos()">Cargar</button>
+<button onclick="cargarDatosDesdeBackend()">Cargar</button>
 
 <!-- Resultados de la carga -->
 <h2>Resultados de la carga:</h2>
@@ -55,6 +55,19 @@
 <div id="resultados"></div>
 
 <script>
+    async function cargarDatosDesdeBackend() {
+        try {
+            // Realizar una solicitud al backend para obtener los datos
+            const response = await fetch('http://localhost:8000/mensaje', { method: 'GET' });
+            const mensaje = await response.text(); // Suponiendo que el mensaje se devuelve como texto
+
+            // Cambiar el texto del label "Seleccionar fuente"
+            document.querySelector('label[for="fuente"]').textContent = mensaje;
+        } catch (error) {
+            console.error('Error al cargar datos desde el backend:', error);
+        }
+    }
+
     // Función para cargar datos
     function cargarDatos() {
         // Lógica para cargar los datos desde la fuente seleccionada
@@ -78,7 +91,7 @@
     }
 
     // Manejar la funcionalidad de "Seleccionar todas"
-    document.getElementById('selectAll').addEventListener('change', function() {
+    document.getElementById('selectAll').addEventListener('change', function () {
         const checkboxes = document.querySelectorAll('input[type="checkbox"]');
         checkboxes.forEach(checkbox => {
             checkbox.checked = this.checked;
