@@ -34,10 +34,13 @@ def insertarUsuarios(nombre):
 
 @app.get('/busqueda')
 def busqueda():
-    Repositorio.fetchDataByNames(
-        tablename="provincia",
-        name="Murcia"
+    resultado = Repositorio.fetchBusqueda(
+        codigo_postal='30833',
+        en_provincia='Murcia',
+        nombre_localidad='SANGONERA LA VERDE O ERMITA NUEVA',
+        tipo='Concertado'
     )
+    return resultado
 
 # @app.route('/csv', methods=['GET'])
 # def csv():
