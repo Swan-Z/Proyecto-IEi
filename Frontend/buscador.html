@@ -58,53 +58,18 @@
         console.log("Cancelando...");
     }
 
-    import { createClient } from '@supabase/supabase-js';
 
-    // Configuración de Supabase
-    const supabaseUrl = 'https://wxohstsphwlwjzsisprz.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind4b2hzdHNwaHdsd2p6c2lzcHJ6Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTY5NzYzMDAwOCwiZXhwIjoyMDEzMjA2MDA4fQ.Cg7nycY-fxGbHcgsGSYOZhJsvsJf7Q0vqGqq7w2vycQ'; 
-    const centroEducativoTable = 'centro_educativo';
-    const localidadTable = 'localidad';
+    async function buscar() {
+        try {
+            // Realizar una solicitud al backend para obtener los datos
+            const response = await fetch('http://localhost:8000/busqueda', { method: 'GET' });
+            const mensaje = await response.text(); // Suponiendo que el mensaje se devuelve como texto
 
-    // Crear una instancia de Supabase client para interactuar con la base de datos
-    const supabase = createClient(supabaseUrl, supabaseKey);
-
-    function buscar() {
-        const localidad = document.getElementById('localidad').value;
-        const codigoPostal = document.getElementById('codigoPostal').value;
-        const provincia = document.getElementById('provincia').value;
-        const tipo = document.getElementById('tipo').value;
-
-        // Añadir cualquier lógica necesaria para buscar aquí
-        console.log('Buscando...');
-        console.log('Localidad:', localidad);
-        console.log('Código Postal:', codigoPostal);
-        console.log('Provincia:', provincia);
-        console.log('Tipo:', tipo);
-
-        const sqlQuery = `
-            SELECT ce.*
-            FROM ${centroEducativoTable} ce
-            JOIN ${localidadTable} l ON ce.id_localidad = l.id
-            WHERE l.en_provincia = '${provincia}'
-                AND l.nombre = '${localidad}'
-                AND ce.codigo_postal = '${codigoPostal}'
-                AND ce.tipo = '${tipo}';
-        `;
-
-        // Realizar la consulta a la base de datos de Supabase
-        supabase.rpc('select', { params: [], sql: sqlQuery })
-            .then(({ data, error }) => {
-                if (error) {
-                    console.error('Error al realizar la consulta a Supabase:', error);
-                } else {
-                    // Manipular los datos obtenidos de Supabase
-                    console.log(data);
-                }
-            })
-            .catch(error => {
-                console.error('Error al realizar la consulta a Supabase:', error);
-            });
+            // Cambiar el texto del label "Seleccionar fuente"
+            document.querySelector('label[for="fuente"]').textContent = mensaje;
+        } catch (error) {
+            console.error('Error al cargar datos desde el backend:', error);
+        }
     }
 
 </script>

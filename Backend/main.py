@@ -32,6 +32,13 @@ def insertarUsuarios(nombre):
     }
     Repositorio.insertData("usuario", data)
 
+@app.get('/busqueda')
+def busqueda():
+    Repositorio.fetchDataByNames(
+        tablename="provincia",
+        name="Murcia"
+    )
+
 # @app.route('/csv', methods=['GET'])
 # def csv():
 #     try:

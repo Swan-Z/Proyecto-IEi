@@ -6,7 +6,7 @@ supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 class Repositorio:
     def fetchData(tablename):
-        usuarios = supabase.table(tablename).select().execute()
+        usuarios = supabase.table(tablename).select('*').execute()
         return usuarios
     
     def insertData(tablename, data):
