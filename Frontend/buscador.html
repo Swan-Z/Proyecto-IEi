@@ -10,22 +10,23 @@
 <h1>Buscador de centros educativos</h1>
 
 <div>
-    <label for="localidad">Localidad:</label>
-    <input type="text" id="localidad" />
+    <label for="localidad" style="margin-left: 27px;">Localidad:</label>
+    <input type="text" id="localidad" style="width: 300px;" />
 </div>
 
-<div>
+<div style="margin-top: 10px;">
     <label for="codigoPostal">Código Postal:</label>
-    <input type="text" id="codigoPostal" />
+    <input type="text" id="codigoPostal" style="width: 300px;" />
 </div>
 
-<div>
-    <label for="provincia">Provincia:</label>
-    <input type="text" id="provincia" />
+<div style="margin-top: 10px;">
+    <label for="provincia" style="margin-left: 28px;">Provincia:</label>
+    <input type="text" id="provincia" style="width: 300px;" />
 </div>
 
-<div>
-    <label for="tipo">Tipo:</label>
+
+<div style="margin-top: 10px;">
+    <label for="tipo" style="margin-left: 60px;">Tipo:</label>
     <select id="tipo">
         <option value="Público">Público</option>
         <option value="Privado">Privado</option>
@@ -35,13 +36,21 @@
 </div>
 
 
-<div id="fuente"></div>
+<div id="fuente" style="margin-top: 10px;" ></div>
 
 
-<div>
-    <button onclick="cancelar()">Cancelar</button>
+<div style="margin-top: 30px; margin-left: 235px;">
+    <button onclick="cancelar()" style="margin-right: 40px;">Cancelar</button>
     <button onclick="buscar()">Buscar</button>
 </div>
+
+<div id="error" style="margin-top: 10px;"></div>
+
+<div id="sinResultados" style="display: none; color: red; font-size: 18px; text-align: center; margin-top: 20px;">
+    No se ha encontrado ningún centro educativo.
+</div>
+
+
 
 <script>
     function obtenerValores() {
@@ -58,9 +67,11 @@
         document.getElementById("codigoPostal").value = "";
         document.getElementById("provincia").value = "";
         document.getElementById("tipo").value = "";
-
-        console.log("Cancelando...");
+        document.getElementById('fuente').innerHTML = "";
+        document.getElementById('sinResultados').style.display = 'none';
     }
+
+    
 
 
     async function buscar() {
@@ -70,16 +81,21 @@
 
         // Verificar si hay datos antes de continuar
         if (localidad === "" && codigoPostal === "" && provincia === "" && tipo === "") {
-            console.warn('No se encontraron datos.');
-            return;
+            document.getElementById('sinResultados').style.display = 'block';
+        }else{
+                document.getElementById('sinResultados').style.display = 'none';
         }
      
         const url = `http://localhost:8000/busqueda/${localidad}/${provincia}/${codigoPostal}/${tipo}`;
         const response = await fetch(url, { method: 'GET'});
         if (!response.ok) {
             console.error('Error al cargar datos desde el backend:', response);
+            document.getElementById('sinResultados').style.display = 'block';
             return;
+        }else{
+            document.getElementById('sinResultados').style.display = 'none';
         }
+        
 
         const datos = await response.json();
         const tablaHTML = `<div style="max-width: auto; margin: 0 auto; font-size: 16px;">
