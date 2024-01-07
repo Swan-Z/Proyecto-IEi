@@ -1,33 +1,38 @@
-from flask import Flask, request, jsonify
-import requests
+from fastapi import FastAPI
+from fastapi.responses import JSONResponse
 from repositorio import *
-from extractors import extractorCSV as extractor
+# from extractors import extractorCSV as extractor
 
-app = Flask(__name__)
+app = FastAPI()
 archivo_csv = 'valenciana.csv'
 
-@app.route('/')
+@app.get('/')
 def index():
     return "Hello, World!"
 
-@app.route('/hello', methods=['GET'])
+@app.get('/hello')
 def consultarUsuarios():
     return Repositorio.fetchData("usuario")
 
-@app.route('/usuario', methods=['GET'])
-def insertarUsuarios():
+@app.get('/usuario')
+def insertarUsuarios(nombre):
+    """
+    Descripción:
+    
+    Es una prueba de la fast api 
+    """
     data = {
-        "nombre": "goodmorning",
+        "nombre": "nombre",
         "password": "world"
     }
     Repositorio.insertData("usuario", data)
 
-@app.route('/csv', methods=['GET'])
-def csv():
-    try:
-        extractor.csv_a_json()
-    except Exception as e:
-        return jsonify({"status": "error", "message": str(e)})
+# @app.route('/csv', methods=['GET'])
+# def csv():
+#     try:
+#         extractor.csv_a_json()
+#     except Exception as e:
+#         return jsonify({"status": "error", "message": str(e)})
  
 # @app.route('/csv', methods=['GET'])
 # def csv():
@@ -44,4 +49,4 @@ def csv():
 #         return jsonify({"status": "error", "message": str(e)})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=7777)
+    uvicorn.run(app, host='0.0.0.0', port=7777)
