@@ -67,8 +67,8 @@
         document.getElementById("codigoPostal").value = "";
         document.getElementById("provincia").value = "";
         document.getElementById("tipo").value = "";
-
-        console.log("Cancelando...");
+        document.getElementById('fuente').innerHTML = "";
+        document.getElementById('sinResultados').style.display = 'none';
     }
 
     
@@ -81,8 +81,9 @@
 
         // Verificar si hay datos antes de continuar
         if (localidad === "" && codigoPostal === "" && provincia === "" && tipo === "") {
-            console.warn('No se encontraron datos.');
-            return;
+            document.getElementById('sinResultados').style.display = 'block';
+        }else{
+                document.getElementById('sinResultados').style.display = 'none';
         }
 
       // Enviar los datos al backend
