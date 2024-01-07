@@ -58,29 +58,29 @@
         console.log("Cancelando...");
     }
 
+    import { createClient } from '@supabase/supabase-js';
+
+    // Configuración de Supabase
+    const supabaseUrl = 'https://wxohstsphwlwjzsisprz.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind4b2hzdHNwaHdsd2p6c2lzcHJ6Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTY5NzYzMDAwOCwiZXhwIjoyMDEzMjA2MDA4fQ.Cg7nycY-fxGbHcgsGSYOZhJsvsJf7Q0vqGqq7w2vycQ'; 
+    const centroEducativoTable = 'centro_educativo';
+    const localidadTable = 'localidad';
+
+    // Crear una instancia de Supabase client para interactuar con la base de datos
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
     function buscar() {
-        const { localidad, codigoPostal, provincia, tipo } = obtenerValores();
+        const localidad = document.getElementById('localidad').value;
+        const codigoPostal = document.getElementById('codigoPostal').value;
+        const provincia = document.getElementById('provincia').value;
+        const tipo = document.getElementById('tipo').value;
 
         // Añadir cualquier lógica necesaria para buscar aquí
-        console.log("Buscando...");
-        console.log("Localidad:", localidad);
-        console.log("Código Postal:", codigoPostal);
-        console.log("Provincia:", provincia);
-        console.log("Tipo:", tipo);
-
-         // Configuración de Supabase
-        const supabaseUrl = 'https://wxohstsphwlwjzsisprz.supabase.co'
-        const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind4b2hzdHNwaHdsd2p6c2lzcHJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTc2MzAwMDgsImV4cCI6MjAxMzIwNjAwOH0.NsICQc-sZFZKwYZpzD6pjXja7q4oWR_m8TXMFndGumQ"
-        const centroEducativoTable = "centro_educativo"; 
-        const localidadTable = "localidad";
-
-        // Construir la URL de la API con los parámetros de búsqueda
-        const urlParams = new URLSearchParams({
-            localidad: localidad,
-            codigo_postal: codigoPostal,
-            provincia: provincia,
-            tipo: tipo
-        });
+        console.log('Buscando...');
+        console.log('Localidad:', localidad);
+        console.log('Código Postal:', codigoPostal);
+        console.log('Provincia:', provincia);
+        console.log('Tipo:', tipo);
 
         const sqlQuery = `
             SELECT ce.*
@@ -90,27 +90,23 @@
                 AND l.nombre = '${localidad}'
                 AND ce.codigo_postal = '${codigoPostal}'
                 AND ce.tipo = '${tipo}';
-            `;
+        `;
 
-        // Construir la URL de la API de Supabase para consultas SQL
-        const apiUrl = `${supabaseUrl}/rest/v1/query?select=${encodeURIComponent(sqlQuery)}`;
-        // Realizar la solicitud GET a la API de Supabase
-        fetch(apiUrl, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'apikey': supabaseKey  // Añadir tu clave API como encabezado
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            // Manipular los datos obtenidos de Supabase
-            console.log(data);
-        })
-        .catch(error => {
-            console.error('Error al realizar la consulta a Supabase:', error);
-        });
+        // Realizar la consulta a la base de datos de Supabase
+        supabase.rpc('select', { params: [], sql: sqlQuery })
+            .then(({ data, error }) => {
+                if (error) {
+                    console.error('Error al realizar la consulta a Supabase:', error);
+                } else {
+                    // Manipular los datos obtenidos de Supabase
+                    console.log(data);
+                }
+            })
+            .catch(error => {
+                console.error('Error al realizar la consulta a Supabase:', error);
+            });
     }
+
 </script>
 
 </body>
