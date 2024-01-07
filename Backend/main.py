@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Path
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from repositorio import *
@@ -32,15 +32,34 @@ def insertarUsuarios(nombre):
     }
     Repositorio.insertData("usuario", data)
 
-@app.get('/busqueda')
-def busqueda():
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get('/busqueda/{nombre_localidad}/{en_provincia}/{codigo_postal}/{tipo}')
+def busqueda(
+    codigo_postal: str = None,
+    en_provincia: str = None,
+    nombre_localidad: str = None,
+    tipo: str = None
+):
+    print(codigo_postal)
+    print(en_provincia)
+    print(nombre_localidad)
+    print(tipo)
+
+    # Utiliza los valores de los parámetros como sea necesario
     resultado = Repositorio.fetchBusqueda(
-        codigo_postal='30833',
-        en_provincia='Murcia',
-        nombre_localidad='SANGONERA LA VERDE O ERMITA NUEVA',
-        tipo='Concertado'
+        codigo_postal=codigo_postal,
+        en_provincia=en_provincia,
+        nombre_localidad=nombre_localidad,
+        tipo=tipo
     )
+    print('soy resultado', resultado)
     return resultado
+    
+
+
 
 # @app.route('/csv', methods=['GET'])
 # def csv():

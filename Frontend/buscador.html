@@ -65,15 +65,27 @@
 
     async function buscar() {
     try {
-        // Realizar una solicitud al backend para obtener los datos
-        const response = await fetch('http://localhost:8000/busqueda', { method: 'GET' });
-        const datos = await response.json(); // Parsear la respuesta como JSON
+        
+        const { localidad, codigoPostal, provincia, tipo } = obtenerValores();
 
         // Verificar si hay datos antes de continuar
-        if (datos.length === 0) {
+        if (localidad === "" && codigoPostal === "" && provincia === "" && tipo === "") {
             console.warn('No se encontraron datos.');
             return;
         }
+
+      // Enviar los datos al backend
+        const url = `http://localhost:8000/busqueda/${localidad}/${provincia}/${codigoPostal}/${tipo}`;
+        const response = await fetch(url, { method: 'GET'});
+        // Verificar si la respuesta es correcta
+        if (!response.ok) {
+            console.error('Error al cargar datos desde el backend:', response);
+            return;
+        }
+
+        const datos = await response.json(); // Parsear la respuesta como JSON
+        console.log('Datos recibidos:', datos);
+
 
         const tablaHTML = `<div style="max-width: auto; margin: 0 auto; font-size: 16px;">
                             <table style="border-collapse: collapse; width: 100%; border: 1px solid #dddddd;">
@@ -93,14 +105,14 @@
                                         `<tr><td style="border: 1px solid #dddddd; text-align: left; padding: 8px;">${item.nombre}
                                         </td><td style="border: 1px solid #dddddd; text-align: left; padding: 8px;">${item.tipo}
                                         </td><td style="border: 1px solid #dddddd; text-align: left; padding: 8px;">${item.direccion}
-                                        </td><td style="border: 1px solid #dddddd; text-align: left; padding: 8px;">${item.localidad}
+                                        </td><td style="border: 1px solid #dddddd; text-align: left; padding: 8px;">${document.getElementById("localidad").value}
                                         </td><td style="border: 1px solid #dddddd; text-align: left; padding: 8px;">${item.codigo_postal}
                                         </td><td style="border: 1px solid #dddddd; text-align: left; padding: 8px;">${document.getElementById("provincia").value}
                                         </td><td style="border: 1px solid #dddddd; text-align: left; padding: 8px;">${item.descripcion}
                                         </td></tr>`).join('')}
                                 </tbody>
                             </table>
-                        </div>`;
+                        </div>`; 
 
         // Cambiar el contenido HTML del elemento con id "fuente"
         document.getElementById('fuente').innerHTML = tablaHTML;

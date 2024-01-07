@@ -28,7 +28,7 @@ class Repositorio:
         respuesta = supabase.table(tablename).select('*').eq('nombre', name).execute()
         return respuesta.data
     
-    def fetchBusqueda(en_provincia, nombre_localidad, codigo_postal, tipo):
+    def fetchBusqueda(codigo_postal, en_provincia, nombre_localidad, tipo):
         try:
             centros = supabase.table('centro_educativo').select('*').eq('codigo_postal', codigo_postal).execute()
             tipo_centro = supabase.table('centro_educativo').select('*').eq('tipo', tipo).execute()
