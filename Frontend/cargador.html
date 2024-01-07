@@ -12,8 +12,13 @@
         }
 
         label {
-            display: block;
+            display: flex;
+            align-items: center;
             margin-bottom: 5px;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 5px;
         }
 
         button {
@@ -22,6 +27,13 @@
 
         #resultados {
             margin-top: 20px;
+        }
+
+        #cuadroTexto {
+            width: 70%;
+            height: 200px;
+            margin-top: 20px;
+            resize: none; /* Evita que se pueda redimensionar */
         }
     </style>
 </head>
@@ -32,17 +44,25 @@
 <label for="fuente">Seleccionar fuente:</label>
 
 <!-- Checkboxes para las opciones -->
-<input type="checkbox" id="selectAll" />
-<label for="selectAll">Seleccionar todas</label>
+<label for="selectAll">
+    <input type="checkbox" id="selectAll" />
+    Seleccionar todas
+</label>
 
-<input type="checkbox" id="murcia" />
-<label for="murcia">Murcia</label>
+<label for="murcia">
+    <input type="checkbox" id="murcia" />
+    Murcia
+</label>
 
-<input type="checkbox" id="comunidadValenciana" />
-<label for="comunidadValenciana">Comunidad Valenciana</label>
+<label for="comunidadValenciana">
+    <input type="checkbox" id="comunidadValenciana" />
+    Comunidad Valenciana
+</label>
 
-<input type="checkbox" id="cataluna" />
-<label for="cataluna">Cataluña</label>
+<label for="cataluna">
+    <input type="checkbox" id="cataluna" />
+    Cataluña
+</label>
 
 <!-- Botones de cancelar y cargar -->
 <button onclick="cancelar()">Cancelar</button>
@@ -50,11 +70,20 @@
 
 <!-- Resultados de la carga -->
 <h2>Resultados de la carga:</h2>
-
-<!-- Contenedor para mostrar los resultados -->
 <div id="resultados"></div>
 
+<!-- Cuadro de texto -->
+<textarea id="cuadroTexto"></textarea>
+
 <script>
+    // Manejar la funcionalidad de "Seleccionar todas"
+    document.getElementById('selectAll').addEventListener('change', function () {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = this.checked;
+        });
+    });
+
     async function cargarDatosDesdeBackend() {
         try {
             // Realizar una solicitud al backend para obtener los datos
@@ -63,40 +92,28 @@
 
             // Cambiar el texto del label "Seleccionar fuente"
             document.querySelector('label[for="fuente"]').textContent = mensaje;
+
+            // Lógica para cargar datos
+            const resultados = ["Dato 1", "Dato 2", "Dato 3"];
+
+            // Limpiar el contenedor antes de agregar los nuevos datos
+            document.getElementById('resultados').innerHTML = '';
+
+            // Mostrar los resultados en el contenedor
+            resultados.forEach(resultado => {
+                const labelResultado = document.createElement('label');
+                labelResultado.textContent = resultado;
+                document.getElementById('resultados').appendChild(labelResultado);
+            });
         } catch (error) {
             console.error('Error al cargar datos desde el backend:', error);
         }
-    }
-
-    // Función para cargar datos
-    function cargarDatos() {
-        // Lógica para cargar los datos desde la fuente seleccionada
-        // En este ejemplo, simplemente agregamos texto a la lista
-        const resultados = ["Dato 1", "Dato 2", "Dato 3"];
-
-        // Limpiar el contenedor antes de agregar los nuevos datos
-        document.getElementById('resultados').innerHTML = '';
-
-        // Mostrar los resultados en el contenedor
-        resultados.forEach(resultado => {
-            const labelResultado = document.createElement('label');
-            labelResultado.textContent = resultado;
-            document.getElementById('resultados').appendChild(labelResultado);
-        });
     }
 
     // Función para cancelar la operación
     function cancelar() {
         // Lógica para cancelar la operación
     }
-
-    // Manejar la funcionalidad de "Seleccionar todas"
-    document.getElementById('selectAll').addEventListener('change', function () {
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-        checkboxes.forEach(checkbox => {
-            checkbox.checked = this.checked;
-        });
-    });
 </script>
 
 </body>
