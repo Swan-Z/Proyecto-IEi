@@ -2,39 +2,11 @@ from fastapi import FastAPI, Path
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from repositorio import *
+from fastapi import FastAPI
 # from extractors import extractorCSV as extractor
 
 app = FastAPI()
 archivo_csv = 'valenciana.csv'
-
-@app.get('/')
-def index():
-    return "Hello, World!"
-
-@app.get('/hello')
-def consultarUsuarios():
-    return Repositorio.fetchData("usuario")
-
-@app.get('/mensaje')
-def consultarUsuarios():
-    return "prueba"
-
-@app.get('/usuario')
-def insertarUsuarios(nombre):
-    """
-    Descripción:
-    
-    Es una prueba de la fast api 
-    """
-    data = {
-        "nombre": "nombre",
-        "password": "world"
-    }
-    Repositorio.insertData("usuario", data)
-
-from fastapi import FastAPI
-
-app = FastAPI()
 
 @app.get('/busqueda/{nombre_localidad}/{en_provincia}/{codigo_postal}/{tipo}')
 def busqueda(
@@ -43,19 +15,12 @@ def busqueda(
     nombre_localidad: str = None,
     tipo: str = None
 ):
-    print(codigo_postal)
-    print(en_provincia)
-    print(nombre_localidad)
-    print(tipo)
-
-    # Utiliza los valores de los parámetros como sea necesario
     resultado = Repositorio.fetchBusqueda(
         codigo_postal=codigo_postal,
         en_provincia=en_provincia,
         nombre_localidad=nombre_localidad,
         tipo=tipo
     )
-    print('soy resultado', resultado)
     return resultado
     
 

@@ -73,20 +73,15 @@
             console.warn('No se encontraron datos.');
             return;
         }
-
-      // Enviar los datos al backend
+     
         const url = `http://localhost:8000/busqueda/${localidad}/${provincia}/${codigoPostal}/${tipo}`;
         const response = await fetch(url, { method: 'GET'});
-        // Verificar si la respuesta es correcta
         if (!response.ok) {
             console.error('Error al cargar datos desde el backend:', response);
             return;
         }
 
-        const datos = await response.json(); // Parsear la respuesta como JSON
-        console.log('Datos recibidos:', datos);
-
-
+        const datos = await response.json();
         const tablaHTML = `<div style="max-width: auto; margin: 0 auto; font-size: 16px;">
                             <table style="border-collapse: collapse; width: 100%; border: 1px solid #dddddd;">
                                 <thead>
