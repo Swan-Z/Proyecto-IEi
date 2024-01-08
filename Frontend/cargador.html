@@ -129,7 +129,7 @@
             };
 
             // Realizar una solicitud al backend enviando los datos
-            const response = await fetch('http://localhost:8000/enviarDatos', {
+            const response = await fetch(`http://localhost:8000/enviarDatos/${selectALL}/${murcia}/${comunidadValenciana}/${catalunya}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
