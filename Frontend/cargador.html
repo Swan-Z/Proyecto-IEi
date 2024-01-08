@@ -33,7 +33,9 @@
             width: 70%;
             height: 200px;
             margin-top: 20px;
-            resize: none; /* Evita que se pueda redimensionar */
+            border: 1px solid #ccc;
+            padding: 10px;
+            overflow: auto;
         }
     </style>
 </head>
@@ -72,8 +74,8 @@
 <h2>Resultados de la carga:</h2>
 <div id="resultados"></div>
 
-<!-- Cuadro de texto -->
-<textarea id="cuadroTexto"></textarea>
+<!-- Cuadro de texto no editable -->
+<div id="cuadroTexto" contenteditable="false"></div>
 
 <script>
     // Manejar la funcionalidad de "Seleccionar todas"
@@ -90,8 +92,8 @@
             const response = await fetch('http://localhost:8000/mensaje', { method: 'GET' });
             const mensaje = await response.text(); // Suponiendo que el mensaje se devuelve como texto
 
-            // Cambiar el texto del label "Seleccionar fuente"
-            document.querySelector('label[for="fuente"]').textContent = mensaje;
+            // Cambiar el texto del cuadro no editable
+            document.getElementById('cuadroTexto').textContent = mensaje;
 
             // Lógica para cargar datos
             const resultados = ["Dato 1", "Dato 2", "Dato 3"];
@@ -110,6 +112,73 @@
         }
     }
 
+    async function enviarDatosAlBackend() {
+        try {
+            // Obtener los valores de los checkboxes
+            const selectAll = document.getElementById('selectAll').checked;
+            const murcia = document.getElementById('murcia').checked;
+            const comunidadValenciana = document.getElementById('comunidadValenciana').checked;
+            const cataluna = document.getElementById('cataluna').checked;
+
+            // Crear un objeto con los valores de los checkboxes
+            const datos = {
+                selectAll: selectAll,
+                murcia: murcia,
+                comunidadValenciana: comunidadValenciana,
+                cataluna: cataluna
+            };
+
+            // Realizar una solicitud al backend enviando los datos
+            const response = await fetch('http://localhost:8000/enviarDatos', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(datos)
+            });
+
+            // Realizar acciones adicionales según la respuesta del backend si es necesario
+            // ...
+
+            // Puedes agregar lógica para manejar la respuesta del backend aquí
+        } catch (error) {
+            console.error('Error al enviar datos al backend:', error);
+        }
+    }
+    
+    async function metodo() {
+        try {
+            // Simular la respuesta del backend en formato JSON
+            const response = await fetch('http://localhost:8000/mensaje', { method: 'GET' });
+            const jsonData = await response.json(); // Suponiendo que el backend devuelve JSON
+
+            // Verificar el tipo de datos recibidos
+            if (Array.isArray(jsonData)) {
+                // Si es una matriz, mostrar en el cuadro de texto
+                document.getElementById('cuadroTexto').textContent = JSON.stringify(jsonData);
+
+                // Lógica para cargar datos
+                const resultados = jsonData.flat(); // Aplanar la matriz
+
+                // Limpiar el contenedor antes de agregar los nuevos datos
+                document.getElementById('resultados').innerHTML = '';
+
+                // Mostrar los resultados en el contenedor
+                resultados.forEach(resultado => {
+                    const labelResultado = document.createElement('label');
+                    labelResultado.textContent = resultado;
+                    document.getElementById('resultados').appendChild(labelResultado);
+                });
+            } else if (typeof jsonData === 'string') {
+                // Si es una cadena, mostrar en el cuadro de texto
+                document.getElementById('cuadroTexto').textContent = jsonData;
+            } else {
+                console.error('Tipo de datos no manejado:', jsonData);
+            }
+        } catch (error) {
+            console.error('Error al cargar datos desde el backend:', error);
+        }
+    }
     // Función para cancelar la operación
     function cancelar() {
         // Lógica para cancelar la operación
