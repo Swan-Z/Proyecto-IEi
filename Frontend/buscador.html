@@ -150,8 +150,21 @@
     function actualizarMapa(latitud, longitud) {
         const coordenadas = [parseFloat(longitud), parseFloat(latitud)];
         map.getView().setCenter(ol.proj.fromLonLat(coordenadas));
-    }
+        // AGREGAR MARCADOR AL MAPA
+            const marker = new ol.Feature({
+                geometry: new ol.geom.Point(ol.proj.fromLonLat(coordenadas)),
+            });
 
+            const markerSource = new ol.source.Vector({
+                features: [marker],
+            });
+
+            const markerLayer = new ol.layer.Vector({
+                source: markerSource,
+            });
+
+            map.addLayer(markerLayer);
+    }
     var map = new ol.Map({
         target: 'map',
         layers: [
