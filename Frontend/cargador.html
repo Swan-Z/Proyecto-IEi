@@ -9,14 +9,23 @@
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-
+        h1 {
+            margin-top: 40px;
+            margin-bottom: 50px;
+            text-align: center;
+        }
         label {
             display: flex;
             align-items: center;
             margin-bottom: 5px;
         }
-
+        label[for="fuente"] {
+            font-size: 20px;
+        }
         input[type="checkbox"] {
             margin-right: 5px;
         }
@@ -24,11 +33,12 @@
         button {
             margin-top: 10px;
         }
-
         #resultados {
-            margin-top: 20px;
+            margin-top: 10px;
         }
-
+        #todo {
+            margin-bottom: 50px;
+        }
         #cuadroTexto {
             width: 70%;
             height: 200px;
@@ -37,38 +47,65 @@
             padding: 10px;
             overflow: auto;
         }
+        #selecciones {
+            display: flex;
+            align-items: flex-start;
+        }
+        .buttonCancelar{
+            width: 100px;
+            height: 40px;
+            text-decoration-color: blue;
+            margin-right: 15px;
+            color: blue;
+            background-color: white;
+        }
+        .buttonCancelar:hover{
+            background-color: aqua;
+        }
+        .buttonCargar{
+            width: 100px;
+            height: 40px;
+            background-color: darkgrey;
+            color: white;
+        }
     </style>
 </head>
 <body>
-
-<h1>Carga de almacen de datos</h1>
-
-<label for="fuente">Seleccionar fuente:</label>
-
-<!-- Checkboxes para las opciones -->
-<label for="selectAll">
-    <input type="checkbox" id="selectAll" />
-    Seleccionar todas
-</label>
-
-<label for="murcia">
-    <input type="checkbox" id="murcia" />
-    Murcia
-</label>
-
-<label for="comunidadValenciana">
-    <input type="checkbox" id="comunidadValenciana" />
-    Comunidad Valenciana
-</label>
-
-<label for="cataluna">
-    <input type="checkbox" id="cataluna" />
-    Cataluña
-</label>
-
+    <h1>Carga de almacén de datos</h1>
+    <div id="todo">
+        <div id="selecciones">
+            <label for="fuente">Seleccionar fuente:</label>
+        
+            <!-- Checkboxes para las opciones -->
+            <div>
+                <label for="selectAll">
+                    <input type="checkbox" id="selectAll" />
+                    Seleccionar todas
+                </label>
+                
+                <label for="murcia">
+                    <input type="checkbox" id="murcia" />
+                    Murcia
+                </label>
+                
+                <label for="comunidadValenciana">
+                    <input type="checkbox" id="comunidadValenciana" />
+                    Comunidad Valenciana
+                </label>
+                
+                <label for="cataluna">
+                    <input type="checkbox" id="cataluna" />
+                    Cataluña
+                </label>
+            </div>
+    </div>
+</div>
+<div id="botones">
+    <button class="buttonCancelar" onclick="cancelar()">Cancelar</button>
+    <button class="buttonCargar" onclick="enviarDatosAlBackend()">Cargar</button>
+</div>
 <!-- Botones de cancelar y cargar -->
-<button onclick="cancelar()">Cancelar</button>
-<button onclick="cargarDatosDesdeBackend()">Cargar</button>
+
 
 <!-- Resultados de la carga -->
 <h2>Resultados de la carga:</h2>
@@ -86,103 +123,101 @@
         });
     });
 
-    async function cargarDatosDesdeBackend() {
-        try {
-            // Realizar una solicitud al backend para obtener los datos
-            const response = await fetch('http://localhost:8000/mensaje', { method: 'GET' });
-            const mensaje = await response.text(); // Suponiendo que el mensaje se devuelve como texto
+    // async function cargarDatosDesdeBackend() {
+    //     try {
+    //         let cSelectAll = document.getElementById('selectAll').checked;
+    //         let cCataluna = document.getElementById('cataluna').checked;
+    //         let cMurcia = document.getElementById('murcia').checked;
+    //         let cCV = document.getElementById('comunidadValenciana').checked;
+    //         // Realizar una solicitud al backend para obtener los datos
+    //         const response = await fetch('http://localhost:8000/mensaje', { method: 'GET' });
+    //         const mensaje = await response.text(); // Suponiendo que el mensaje se devuelve como texto
 
-            // Cambiar el texto del cuadro no editable
-            document.getElementById('cuadroTexto').textContent = mensaje;
+    //         // Cambiar el texto del cuadro no editable
+    //         document.getElementById('cuadroTexto').textContent = mensaje;
 
-            // Lógica para cargar datos
-            const resultados = ["Dato 1", "Dato 2", "Dato 3"];
+    //         // Lógica para cargar datos
+    //         const resultados = ["Dato 1", "Dato 2", "Dato 3"];
 
-            // Limpiar el contenedor antes de agregar los nuevos datos
-            document.getElementById('resultados').innerHTML = '';
+    //         // Limpiar el contenedor antes de agregar los nuevos datos
+    //         document.getElementById('resultados').innerHTML = '';
 
-            // Mostrar los resultados en el contenedor
-            resultados.forEach(resultado => {
-                const labelResultado = document.createElement('label');
-                labelResultado.textContent = resultado;
-                document.getElementById('resultados').appendChild(labelResultado);
-            });
-        } catch (error) {
-            console.error('Error al cargar datos desde el backend:', error);
-        }
-    }
+    //         // Mostrar los resultados en el contenedor
+    //         resultados.forEach(resultado => {
+    //             const labelResultado = document.createElement('label');
+    //             labelResultado.textContent = resultado;
+    //             document.getElementById('resultados').appendChild(labelResultado);
+    //         });
+    //     } catch (error) {
+    //         console.error('Error al cargar datos desde el backend:', error);
+    //     }
+    // }
 
     async function enviarDatosAlBackend() {
-        try {
-            // Obtener los valores de los checkboxes
-            const selectAll = document.getElementById('selectAll').checked;
-            const murcia = document.getElementById('murcia').checked;
-            const comunidadValenciana = document.getElementById('comunidadValenciana').checked;
-            const cataluna = document.getElementById('cataluna').checked;
+    try {
+        // Obtener los valores de los checkboxes
+        const selectAll = document.getElementById('selectAll').checked;
+        const murcia = document.getElementById('murcia').checked;
+        const comunidadValenciana = document.getElementById('comunidadValenciana').checked;
+        const cataluna = document.getElementById('cataluna').checked;
 
-            // Crear un objeto con los valores de los checkboxes
-            const datos = {
-                selectAll: selectAll,
-                murcia: murcia,
-                comunidadValenciana: comunidadValenciana,
-                cataluna: cataluna
-            };
+        // Realizar una solicitud al backend enviando los datos
+        const response = await fetch(`http://localhost:8000/enviarDatos?selectAll=${selectAll}&murcia=${murcia}&comunidadValenciana=${comunidadValenciana}&cataluna=${cataluna}`, {
+            method: 'GET',
+        });
 
-            // Realizar una solicitud al backend enviando los datos
-            const response = await fetch(`http://localhost:8000/enviarDatos/${selectALL}/${murcia}/${comunidadValenciana}/${catalunya}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(datos)
-            });
-
-            // Realizar acciones adicionales según la respuesta del backend si es necesario
-            // ...
-
-            // Puedes agregar lógica para manejar la respuesta del backend aquí
-        } catch (error) {
-            console.error('Error al enviar datos al backend:', error);
+        // Verificar si la respuesta del servidor es exitosa
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
         }
+
+        // Obtener los datos JSON de la respuesta
+        const responseData = await response.json();
+
+        // Actualizar el contenido del cuadro de texto con la respuesta del servidor
+        document.getElementById('cuadroTexto').textContent = JSON.stringify(responseData);
+    } catch (error) {
+        console.error('Error al enviar datos al backend:', error);
     }
+}
+
     
-    async function metodo() {
-        try {
-            // Simular la respuesta del backend en formato JSON
-            const response = await fetch('http://localhost:8000/mensaje', { method: 'GET' });
-            const jsonData = await response.json(); // Suponiendo que el backend devuelve JSON
+    // async function metodo() {
+    //     try {
+    //         // Simular la respuesta del backend en formato JSON
+    //         const response = await fetch('http://localhost:8000/mensaje', { method: 'GET' });
+    //         const jsonData = await response.json(); // Suponiendo que el backend devuelve JSON
 
-            // Verificar el tipo de datos recibidos
-            if (Array.isArray(jsonData)) {
-                // Si es una matriz, mostrar en el cuadro de texto
-                document.getElementById('cuadroTexto').textContent = JSON.stringify(jsonData);
+    //         // Verificar el tipo de datos recibidos
+    //         if (Array.isArray(jsonData)) {
+    //             // Si es una matriz, mostrar en el cuadro de texto
+    //             document.getElementById('cuadroTexto').textContent = JSON.stringify(jsonData);
 
-                // Lógica para cargar datos
-                const resultados = jsonData.flat(); // Aplanar la matriz
+    //             // Lógica para cargar datos
+    //             const resultados = jsonData.flat(); // Aplanar la matriz
 
-                // Limpiar el contenedor antes de agregar los nuevos datos
-                document.getElementById('resultados').innerHTML = '';
+    //             // Limpiar el contenedor antes de agregar los nuevos datos
+    //             document.getElementById('resultados').innerHTML = '';
 
-                // Mostrar los resultados en el contenedor
-                resultados.forEach(resultado => {
-                    const labelResultado = document.createElement('label');
-                    labelResultado.textContent = resultado;
-                    document.getElementById('resultados').appendChild(labelResultado);
-                });
-            } else if (typeof jsonData === 'string') {
-                // Si es una cadena, mostrar en el cuadro de texto
-                document.getElementById('cuadroTexto').textContent = jsonData;
-            } else {
-                console.error('Tipo de datos no manejado:', jsonData);
-            }
-        } catch (error) {
-            console.error('Error al cargar datos desde el backend:', error);
-        }
-    }
-    // Función para cancelar la operación
-    function cancelar() {
-        // Lógica para cancelar la operación
-    }
+    //             // Mostrar los resultados en el contenedor
+    //             resultados.forEach(resultado => {
+    //                 const labelResultado = document.createElement('label');
+    //                 labelResultado.textContent = resultado;
+    //                 document.getElementById('resultados').appendChild(labelResultado);
+    //             });
+    //         } else if (typeof jsonData === 'string') {
+    //             // Si es una cadena, mostrar en el cuadro de texto
+    //             document.getElementById('cuadroTexto').textContent = jsonData;
+    //         } else {
+    //             console.error('Tipo de datos no manejado:', jsonData);
+    //         }
+    //     } catch (error) {
+    //         console.error('Error al cargar datos desde el backend:', error);
+    //     }
+    // }
+    // async function cancelar() {
+    //     console.log(document.getElementById('murcia').checked);
+    // }
 </script>
 
 </body>

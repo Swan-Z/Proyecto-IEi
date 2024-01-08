@@ -22,6 +22,18 @@ def busqueda(
         tipo=tipo
     )
     return resultado
+
+@app.get('/enviarDatos')
+def cargar(
+    selectAll: bool,
+    murcia: bool,
+    comunidadValenciana: bool,
+    cataluna: bool
+):
+    if murcia ==True:
+        return murcia
+    if cataluna == True: 
+        return cataluna
     
 
 
