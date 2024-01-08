@@ -28,6 +28,13 @@ class Repositorio:
         respuesta = supabase.table(tablename).select('*').eq('nombre', name).execute()
         return respuesta.data
     
+    def fetchDataByNameAndAddress(name, address):
+        # Realiza una consulta a la tabla 'tablename' donde 'nombre' sea igual a 'name' y 'direccion' sea igual a 'address'
+        respuesta = supabase.table('centro_educativo').select('*').eq('nombre', name).eq('direccion', address).execute()
+
+        # Retorna los datos obtenidos de la consulta
+        return respuesta.data
+    
     def fetchBusqueda(codigo_postal, en_provincia, nombre_localidad, tipo):
         try:
             centros = supabase.table('centro_educativo').select('*').eq('codigo_postal', codigo_postal).execute()

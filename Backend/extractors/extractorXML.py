@@ -148,10 +148,10 @@ def json_a_BD():
             } 
 
             if datoCentro['nombre'] != None and datoCentro['direccion'] != None and datoCentro['longitud'] != None and datoCentro['latitud'] != None and datoCentro['codigo_postal'] != None:
-                Repositorio.insertData('Provincia', datoProvincia)
-                Repositorio.insertData('Localidad', datoLocalidad)
-                datoCentro['id_localidad'] = Repositorio.fetchDataByNames('Localidad', datoLocalidad['nombre'])[0]['id']
-                Repositorio.insertData('Centro_Educativo', datoCentro)
+                Repositorio.insertData('provincia', datoProvincia)
+                Repositorio.insertData('localidad', datoLocalidad)
+                datoCentro['id_localidad'] = Repositorio.fetchDataByNames('localidad', datoLocalidad['nombre'])[0]['id']
+                Repositorio.insertData('centro_educativo', datoCentro)
             else:
                 print('')
 
