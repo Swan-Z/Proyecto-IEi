@@ -31,19 +31,30 @@ def json_a_BD():
     # rutaNuevo = 'jsonResultFromWrapper/CAT_Nuevo.json'
     rutaComJSON = os.path.abspath(os.path.join(directorio_actual, rutaJSON))
     # rutaComNuevo = os.path.abspath(os.path.join(directorio_actual, rutaNuevo))
+    resultado = {
+         'correctos': 0,
+         'reparados': [],
+         'rechazados': [],
+    }
 
     with open(rutaComJSON, 'r', encoding='utf-8') as archivo:
         lector_json = json.load(archivo)
 
         for fila in lector_json:
-
+            reparado=False
+            rechazado=False
+            error = 'Cataluña, '
+            motivo = ''
+            arreglo = ''
              # Renombrar claves si existen
             if 'denominaci_completa' in fila['row'] and fila['row']['denominaci_completa'] is not None and fila['row']['denominaci_completa'] != '':
                 fila['nombre'] = fila['row'].pop('denominaci_completa')
             else:  
-                fila['nombre'] = None
+                fila['nombre'] = ''
                 print(Colores.ROJO + 'No existe la clave denominaci_completa, por lo tanto esta fila no será insertada: ' + Colores.RESET)
                 print(Colores.ROJO + str(fila) + Colores.RESET)
+                rechazado=True
+                motivo += 'no tiene nombre. '
 
             if 'nom_naturalesa' in fila['row']:
                 if 'concertat' in fila['row']['nom_naturalesa'].lower():
@@ -57,18 +68,26 @@ def json_a_BD():
                         print(Colores.AMARILLO + 'No se ha podido determinar el tipo de centro: ' + Colores.RESET)
                         print(Colores.AMARILLO + str(fila) + Colores.RESET)
                         fila['tipo'] = 'Otros'
+                        reparado=True
+                        motivo += 'no se ha podido determinar el tipo de centro, '
+                        arreglo += 'se le ha asignado el tipo Otros.'
             else:
                 fila['tipo'] = 'Otros'
                 print(Colores.AMARILLO + 'No existe la clave nom_naturalesa: ' + Colores.RESET)
                 print(Colores.AMARILLO + str(fila) + Colores.RESET)
+                reparado=True
+                motivo += 'no se ha podido determinar el tipo de centro, '
+                arreglo += 'se le ha asignado el tipo Otros.'
 
 
             if 'adre_a' in fila['row'] and fila['row']['adre_a'] is not None and fila['row']['adre_a'] != '':
                 fila['direccion'] = fila['row'].pop('adre_a')
             else:
-                fila['direccion'] = None
+                fila['direccion'] = ''
                 print(Colores.ROJO + 'No existe la dirección, por lo tanto esta fila no será insertada: '+ Colores.RESET)
                 print(Colores.ROJO + str(fila) + Colores.RESET)
+                rechazado=True
+                motivo += 'no tiene dirección. '
                 
             if 'codi_postal' in fila['row'] and fila['row']['codi_postal'] is not None and fila['row']['codi_postal'] != '':
                 fila['codigo_postal'] = fila['row'].pop('codi_postal')
@@ -79,6 +98,8 @@ def json_a_BD():
                 fila['nombre_provincia'] = None
                 print(Colores.ROJO + 'No existe la clave codi_postal, por lo tanto esta fila no será insertada: ' + Colores.RESET)
                 print(Colores.ROJO + str(fila) + Colores.RESET)
+                rechazado=True
+                motivo += 'no tiene código postal. '
                     
             if 'estudis' in fila['row']:
                 fila['descripcion'] = fila['row'].pop('estudis')
@@ -95,19 +116,25 @@ def json_a_BD():
                     fila['longitud'] = None
                     print(Colores.ROJO + 'No existe la clave coordenades_geo_x por lo tanto esta fila no será insertada: ' + Colores.RESET)
                     print(Colores.ROJO + str(fila) + Colores.RESET)
+                    rechazado=True
+                    motivo += 'no tiene longitud. '
             if 'coordenades_geo_y' in fila['row'] and fila['row']['coordenades_geo_y'] is not None and fila['row']['coordenades_geo_y'] != '':
                     fila['latitud'] = fila['row'].pop('coordenades_geo_y')
             else:
                     fila['latitud'] = None
                     print(Colores.ROJO + 'No existe la clave coordenades_geo_y por lo tanto esta fila no será insertada: ' + Colores.RESET)
                     print(Colores.ROJO + str(fila) + Colores.RESET)
+                    rechazado=True
+                    motivo += 'no tiene latitud. '
             #-----------------------------------------------------------------
             if 'nom_municipi' in fila['row'] and fila['row']['nom_municipi'] is not None and fila['row']['nom_municipi'] != '':
                 fila['localidad'] = fila['row'].pop('nom_municipi')
             else:
                 print(Colores.ROJO + 'No existe la clave nom_municipi, por lo tanto esta fila no será insertada: ' + Colores.RESET)
                 print(Colores.ROJO + str(fila) + Colores.RESET)
-                fila['localidad'] = None
+                fila['localidad'] = ''
+                rechazado=True
+                motivo += 'no tiene localidad. '
             if fila['codigo_provincia'] != None:
                 if fila['codigo_provincia'] == '08':
                     fila['nombre_provincia'] = 'Barcelona'
@@ -146,14 +173,22 @@ def json_a_BD():
                 'nombre': fila['localidad'],
                 'en_provincia': fila['nombre_provincia']
             } 
-
-            if datoCentro['nombre'] != None and datoCentro['direccion'] != None and datoCentro['longitud'] != None and datoCentro['latitud'] != None and datoCentro['codigo_postal'] != None:
-                Repositorio.insertData('provincia', datoProvincia)
-                Repositorio.insertData('localidad', datoLocalidad)
-                datoCentro['id_localidad'] = Repositorio.fetchDataByNames('localidad', datoLocalidad['nombre'])[0]['id']
-                Repositorio.insertData('centro_educativo', datoCentro)
+            if not rechazado:
+                if reparado:
+                    resultado['reparados'].append(error + datoCentro['nombre'] + ', ' + datoLocalidad['nombre'] + ', ' + motivo + arreglo)
+                if Repositorio.fetchDataByNames('provincia', datoProvincia['nombre']) == []:
+                    Repositorio.insertData('provincia', datoProvincia)
+                if Repositorio.fetchDataByNames('localidad', datoLocalidad['nombre']) == []:
+                    Repositorio.insertData('localidad', datoLocalidad)
+                if Repositorio.fetchDataByNameAndAddress(datoCentro['nombre'], datoCentro['direccion']) == []:
+                    datoCentro['id_localidad'] = Repositorio.fetchDataByNames('localidad', datoLocalidad['nombre'])[0]['id']
+                    Repositorio.insertData('centro_educativo', datoCentro)
+                    resultado['correctos'] += 1
             else:
-                print('')
+                resultado['rechazados'].append(error + datoCentro['nombre'] + ', ' + datoLocalidad['nombre'] + ', ' + motivo)
 
+    for clave, valor in resultado.items():
+        print(f"{clave}: {valor}")
+    return resultado     
 #xml_a_json()
 json_a_BD()

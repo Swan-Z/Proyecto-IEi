@@ -51,7 +51,7 @@ def json_a_BD():
             if 'dencen' in fila and fila['dencen'] is not None and fila['dencen'] != '':
                 fila['nombre'] = fila.pop('dencen')
             else:  
-                fila['nombre'] = None
+                fila['nombre'] = ''
                 print(Colores.ROJO + 'No existe la clave dencen, por lo tanto esta fila no será insertada: ' + Colores.RESET)
                 print(Colores.ROJO + str(fila) + Colores.RESET)
                 rechazado=True
@@ -71,7 +71,7 @@ def json_a_BD():
                         fila['tipo'] = 'Otros'
                         reparado=True
                         motivo += 'no se ha podido determinar el tipo de centro, '
-                        arreglo += 'se le ha asignado el tipo Otros, '
+                        arreglo += 'se le ha asignado el tipo Otros.'
             else:
                 fila['tipo'] = 'Otros'
                 print(Colores.AMARILLO + 'No existe la clave tipo: ' + Colores.RESET)
@@ -82,7 +82,7 @@ def json_a_BD():
             if 'domcen' in fila and fila['domcen'] is not None and fila['domcen'] != '':
                 fila['direccion'] = fila.pop('domcen')
             else:
-                fila['direccion'] = None
+                fila['direccion'] = ''
                 print(Colores.ROJO + 'No existe la dirección, por lo tanto esta fila no será insertada: '+ Colores.RESET)
                 print(Colores.ROJO + str(fila) + Colores.RESET)
                 rechazado=True
@@ -91,7 +91,7 @@ def json_a_BD():
             if 'cpcen' in fila and fila['cpcen'] is not None and fila['cpcen'] != '':
                 fila['codigo_postal'] = fila.pop('cpcen')
             else:
-                fila['codigo_postal'] = None
+                fila['codigo_postal'] = ''
                 print(Colores.ROJO + 'No existe la clave cpcen, por lo tanto esta fila no será insertada: ' + Colores.RESET)
                 print(Colores.ROJO + str(fila) + Colores.RESET)
                 rechazado=True
@@ -106,7 +106,7 @@ def json_a_BD():
                     fila['telefono'] = None
                     reparado=True
                     motivo += 'número con formato erroneo, '
-                    arreglo += 'se ha dejado el campo del teléfono vacío, '
+                    arreglo += 'se ha dejado el campo del teléfono vacío.'
             else:
                 if 'telcen2' in fila:
                     if len(fila['telcen2']) == 9:
@@ -166,7 +166,7 @@ def json_a_BD():
             else:
                 print(Colores.ROJO + 'No existe la clave loccen, por lo tanto esta fila no será insertada: ' + Colores.RESET)
                 print(Colores.ROJO + str(fila) + Colores.RESET)
-                fila['localidad'] = None
+                fila['localidad'] = ''
                 rechazado=True
                 motivo += 'no tiene localidad. '
 
