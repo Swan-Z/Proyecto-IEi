@@ -150,20 +150,39 @@
     function actualizarMapa(latitud, longitud) {
         const coordenadas = [parseFloat(longitud), parseFloat(latitud)];
         map.getView().setCenter(ol.proj.fromLonLat(coordenadas));
-        // AGREGAR MARCADOR AL MAPA
-            const marker = new ol.Feature({
-                geometry: new ol.geom.Point(ol.proj.fromLonLat(coordenadas)),
-            });
+    // Estilo personalizado para el marcador
+        const markerStyle = new ol.style.Style({
+            image: new ol.style.Icon({
+                anchor: [0.5, 1],
+                src: 'ruta-al-icono/map-marker-alt.svg', // Reemplaza con la ruta a tu ícono personalizado
+                scale: 0.05, // Ajusta el tamaño según sea necesario
+            }),
+        });
 
-            const markerSource = new ol.source.Vector({
-                features: [marker],
-            });
+       // Capa vectorial con el marcador y estilo personalizado
+        const vectorLayer = new ol.layer.Vector({
+            source: new ol.source.Vector({
+                features: [
+                    new ol.Feature({
+                        geometry: new ol.geom.Point(ol.proj.fromLonLat(coordenadas)),
+                    }),
+                ],
+            }),
+            style: markerStyle,
+        });
 
-            const markerLayer = new ol.layer.Vector({
-                source: markerSource,
-            });
+        // Limpiar capas vectoriales anteriores antes de añadir la nueva capa
+        map.getLayers().forEach(layer => {
+            if (layer instanceof ol.layer.Vector) {
+                map.removeLayer(layer);
+            }
+        });
 
-            map.addLayer(markerLayer);
+        // Añadir la nueva capa al mapa
+        map.addLayer(vectorLayer);
+
+        // Centrar el mapa en las nuevas coordenadas
+        map.getView().setCenter(ol.proj.fromLonLat(coordenadas));
     }
     var map = new ol.Map({
         target: 'map',
