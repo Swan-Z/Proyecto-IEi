@@ -53,13 +53,14 @@
     <button onclick="buscar()">Buscar</button>
 </div>
 
-<div id="map" style="width: 100%; height: 400px; margin-top: 20px;"></div>
-
 <div id="error" style="margin-top: 10px;"></div>
 
 <div id="sinResultados" style="display: none; color: red; font-size: 18px; text-align: center; margin-top: 20px;">
     No se ha encontrado ningún centro educativo.
 </div>
+
+<div id="map" style="width: 100%; height: 400px; margin-top: 20px;"></div>
+
 
 <script>
     function obtenerValores() {
@@ -177,6 +178,9 @@
 
             map.addLayer(markerLayer);
         }
+
+
+        
     var map = new ol.Map({
         target: 'map',
         layers: [
