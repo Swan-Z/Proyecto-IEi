@@ -199,4 +199,4 @@ def json_a_BD():
     # Aqui se envia la informacion sobre la subida al frontend
     return resultado     
 #xml_a_json()
-json_a_BD()
+#json_a_BD()
