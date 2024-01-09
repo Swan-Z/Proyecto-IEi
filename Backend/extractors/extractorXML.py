@@ -57,7 +57,7 @@ def json_a_BD():
                 rechazado=True
                 motivo += 'no tiene nombre. '
             # Aqui se recupera el valor de la clave nom_naturalesa y se le asigna a la clave tipo
-            if 'nom_naturalesa' in fila['row']:
+            if 'nom_naturalesa' in fila['row'] and fila['row']['nom_naturalesa'] is not None and fila['row']['nom_naturalesa'] != '':
                 if 'concertat' in fila['row']['nom_naturalesa'].lower():
                     fila['tipo'] = 'Concertado'
                 else:
