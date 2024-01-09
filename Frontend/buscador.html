@@ -172,8 +172,8 @@
     }
 
     function agregarMarcador(datos) {
-        const coordenadas = [parseFloat(datos.longitud), parseFloat(datos.latitud)];
-        
+        const coordenadas = [parseFloat(datos.long), parseFloat(datos.lat)];
+       
         // Modificar el estilo del marcador
         const markerStyle = new ol.style.Style({
             image: new ol.style.Icon({
