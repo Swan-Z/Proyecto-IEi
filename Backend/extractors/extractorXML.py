@@ -27,7 +27,7 @@ class Colores:
 
 def json_a_BD():
     directorio_actual = os.getcwd()
-    rutaJSON = 'jsonResultFromWrapper/CAT_demo.json'
+    rutaJSON = 'jsonResultFromWrapper/CAT_DEF.json'
     # rutaNuevo = 'jsonResultFromWrapper/CAT_Nuevo.json'
     rutaComJSON = os.path.abspath(os.path.join(directorio_actual, rutaJSON))
     # rutaComNuevo = os.path.abspath(os.path.join(directorio_actual, rutaNuevo))

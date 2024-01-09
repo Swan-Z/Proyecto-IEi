@@ -1,11 +1,11 @@
 import pandas as pd
 import os
 
-# directorio_actual = os.getcwd()
-# rutaCSV = 'ficheroFuenteDatos/CV_demo.csv'
-# rutaJSON = 'jsonResultFromWrapper/CV_demo.json'
-# rutaComCSV = os.path.abspath(os.path.join(directorio_actual, rutaCSV))
-# rutaComJSON = os.path.abspath(os.path.join(directorio_actual, rutaJSON))
+directorio_actual = os.getcwd()
+rutaCSV = 'ficheroFuenteDatos/CV_DEF.csv'
+rutaJSON = 'jsonResultFromWrapper/CV_DEF.json'
+rutaComCSV = os.path.abspath(os.path.join(directorio_actual, rutaCSV))
+rutaComJSON = os.path.abspath(os.path.join(directorio_actual, rutaJSON))
 
 def wrapperCSV_to_JSON(pathCSV, pathJSON):
     csv = pd.read_csv(pathCSV, delimiter=';')
@@ -16,4 +16,4 @@ def wrapperCSV_to_JSON(pathCSV, pathJSON):
     with open(pathJSON, 'w', encoding='utf-8') as json_file:
         json_file.write(jsonS)
     
-# CSV_to_JSON(rutaComCSV, rutaComJSON)
+wrapperCSV_to_JSON(rutaComCSV, rutaComJSON)

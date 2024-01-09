@@ -21,7 +21,7 @@ from repositorio import *
 
 def json_a_BD():
     directorio_actual = os.getcwd()
-    rutaJSON = 'jsonResultFromWrapper/MUR_demo.json'
+    rutaJSON = 'jsonResultFromWrapper/MUR_DEF.json'
     # rutaNuevo = 'jsonResultFromWrapper/MUR_Nuevo.json'
     rutaComJSON = os.path.abspath(os.path.join(directorio_actual, rutaJSON))
     # rutaComNuevo = os.path.abspath(os.path.join(directorio_actual, rutaNuevo))

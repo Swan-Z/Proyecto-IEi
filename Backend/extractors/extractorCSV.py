@@ -38,7 +38,7 @@ def json_a_BD():
          'rechazados': [],
     }
     directorio_actual = os.getcwd()
-    rutaJSON = 'jsonResultFromWrapper/CV_demo.json'
+    rutaJSON = 'jsonResultFromWrapper/CV_DEF.json'
     rutaComJSON = os.path.abspath(os.path.join(directorio_actual, rutaJSON))
     rutaNuevo = 'jsonResultFromWrapper/CV_Nuevo.json'
     rutaComNuevo = os.path.abspath(os.path.join(directorio_actual, rutaNuevo))
