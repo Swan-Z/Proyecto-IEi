@@ -68,6 +68,18 @@
             background-color: darkgrey;
             color: white;
         }
+        canvas {
+            display: block;
+            margin: 20px auto;
+            background-color: #f0f0f0;
+          }
+      
+          #spinner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+          }
     </style>
 </head>
 <body>
@@ -123,36 +135,6 @@
         });
     });
 
-    // async function cargarDatosDesdeBackend() {
-    //     try {
-    //         let cSelectAll = document.getElementById('selectAll').checked;
-    //         let cCataluna = document.getElementById('cataluna').checked;
-    //         let cMurcia = document.getElementById('murcia').checked;
-    //         let cCV = document.getElementById('comunidadValenciana').checked;
-    //         // Realizar una solicitud al backend para obtener los datos
-    //         const response = await fetch('http://localhost:8000/mensaje', { method: 'GET' });
-    //         const mensaje = await response.text(); // Suponiendo que el mensaje se devuelve como texto
-
-    //         // Cambiar el texto del cuadro no editable
-    //         document.getElementById('cuadroTexto').textContent = mensaje;
-
-    //         // Lógica para cargar datos
-    //         const resultados = ["Dato 1", "Dato 2", "Dato 3"];
-
-    //         // Limpiar el contenedor antes de agregar los nuevos datos
-    //         document.getElementById('resultados').innerHTML = '';
-
-    //         // Mostrar los resultados en el contenedor
-    //         resultados.forEach(resultado => {
-    //             const labelResultado = document.createElement('label');
-    //             labelResultado.textContent = resultado;
-    //             document.getElementById('resultados').appendChild(labelResultado);
-    //         });
-    //     } catch (error) {
-    //         console.error('Error al cargar datos desde el backend:', error);
-    //     }
-    // }
-
     async function enviarDatosAlBackend() {
     try {
         // Obtener los valores de los checkboxes
@@ -162,7 +144,7 @@
         const cataluna = document.getElementById('cataluna').checked;
 
         // Realizar una solicitud al backend enviando los datos
-        const response = await fetch(`http://localhost:8000/enviarDatos?selectAll=${selectAll}&murcia=${murcia}&comunidadValenciana=${comunidadValenciana}&cataluna=${cataluna}`, {
+        const response = await fetch(`http://localhost:8000/enviarDatos?murcia=${murcia}&comunidadValenciana=${comunidadValenciana}&cataluna=${cataluna}`, {
             method: 'GET',
         });
 
@@ -178,9 +160,9 @@
         const reparados = responseData.reparados.map(item => `${item}`).join('\n');
         const rechazados = responseData.rechazados.map(item => `${item}`).join('\n');
 
-        const textoFromateado = `Número de registros cargados correctamente: ${correctos}\nRegistros con errores y reparados:\n{${reparados}}\nRegistros con errores y rechazados\n{${rechazados}}`;
+        const textoFormateado = `Número de registros cargados correctamente: ${correctos}\n\nRegistros con errores y reparados:\n{${reparados}}\n\nRegistros con errores y rechazados:\n{${rechazados}}`;
         
-        document.getElementById('cuadroTexto').textContent = textoFromateado;
+        document.getElementById('cuadroTexto').innerText = textoFormateado;
         // Actualizar el contenido del cuadro de texto con la respuesta del servidor
         //document.getElementById('cuadroTexto').textContent = JSON.stringify(responseData);
     } catch (error) {

@@ -209,4 +209,4 @@ def json_a_BD():
         print(f"{clave}: {valor}")
     # Aqui se envia la informacion sobre la subida al frontend
     return resultado            
-json_a_BD()
+#json_a_BD()

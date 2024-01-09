@@ -215,4 +215,4 @@ def json_a_BD():
     # Aqui se envia la informacion sobre la subida al frontend
     return resultado         
 #csv_a_json()
-json_a_BD()
+#json_a_BD()

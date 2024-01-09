@@ -3,7 +3,9 @@ from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from repositorio import *
 from fastapi import FastAPI
-# from extractors import extractorCSV as extractor
+from extractors import extractorCSV
+from extractors import extractorJSON
+from extractors import extractorXML
 
 app = FastAPI()
 archivo_csv = 'valenciana.csv'
@@ -36,41 +38,33 @@ def busqueda(
 
 @app.get('/enviarDatos')
 def cargar(
-    selectAll: bool,
     murcia: bool,
     comunidadValenciana: bool,
     cataluna: bool
 ):
-    # if murcia ==True:
-    #     return murcia
-    # if cataluna == True: 
-    #     return cataluna
+    datos = {'correctos': 0, 'reparados': [], 'rechazados': []}
+    if murcia == True:
+         datosMurcia = extractorJSON.json_a_BD()
+         datos['correctos'] += datosMurcia['correctos']
+         datos['reparados'] += datosMurcia['reparados']
+         datos['rechazados'] += datosMurcia['rechazados']
+    if cataluna == True:
+         datosCataluna = extractorXML.json_a_BD()
+         datos['correctos'] += datosCataluna['correctos']
+         datos['reparados'] += datosCataluna['reparados']
+         datos['rechazados'] += datosCataluna['rechazados']
+    if comunidadValenciana == True:
+         datoscomunidadValenciana = extractorCSV.json_a_BD()
+         datos['correctos'] += datoscomunidadValenciana['correctos']
+         datos['reparados'] += datoscomunidadValenciana['reparados']
+         datos['rechazados'] += datoscomunidadValenciana['rechazados']
     
-    return {'correctos': 7, 'reparados': ['hello', 'how are you', 'im fine, thank you'], 'rechazados': ['hasta aqui, adios']}
+    for clave, valor in datos.items():
+        print(f"{clave}: {valor}")
+    return datos
+    #return {'correctos': 7, 'reparados': ['hello', 'how are you', 'im fine, thank you'], 'rechazados': ['hasta aqui, adios']}
     
 
-
-
-# @app.route('/csv', methods=['GET'])
-# def csv():
-#     try:
-#         extractor.csv_a_json()
-#     except Exception as e:
-#         return jsonify({"status": "error", "message": str(e)})
- 
-# @app.route('/csv', methods=['GET'])
-# def csv():
-#     try:
-#         extractor.csv_a_json(archivo_csv, 'nuevo.json')
-#         archivo = open('nuevo.json', 'r')
-#         data = {
-#             "id": "46P01044"
-#         }
-#         print(data)
-#         Repositorio.insertData("Centro_Educativo", data)
-#         #return jsonify({"status": "success", "message": "Datos convertidos y guardados correctamente."})
-#     except Exception as e:
-#         return jsonify({"status": "error", "message": str(e)})
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Permitir todas las solicitudes, ajusta esto según tus necesidades

@@ -81,6 +81,7 @@
         document.getElementById('sinResultados').style.display = 'none';
     }
 
+
     async function buscar() {
         try {
             const { localidad, codigoPostal, provincia, tipo } = obtenerValores();
@@ -88,29 +89,34 @@
             // Verificar si hay datos antes de continuar
             if (localidad === "" && codigoPostal === "" && provincia === "" && tipo === "") {
                 document.getElementById('sinResultados').style.display = 'block';
+                return;
             } else {
                 document.getElementById('sinResultados').style.display = 'none';
             }
 
             // Enviar los datos al backend
             const url = `http://localhost:8000/busqueda/${localidad}/${provincia}/${codigoPostal}/${tipo}`;
-            const response = await fetch(url, { method: 'GET' });
+            
+            let response = [];
+            try {
+                response = await fetch(url, { method: 'GET' });
+            } catch (error) {
+                document.getElementById('sinResultados').style.display = 'block';
+            }
 
-            // Verificar si la respuesta es correcta
-            if (!response.ok) {
-                console.error('Error al cargar datos desde el backend:', response);
+            
+            const datos = await response.json();
+            
+            if (datos == null) {
                 document.getElementById('sinResultados').style.display = 'block';
                 return;
             } else {
                 document.getElementById('sinResultados').style.display = 'none';
             }
 
-            const datos = await response.json(); // Parsear la respuesta como JSON
-            console.log('Datos recibidos:', datos);
-            
-            //ACTUALIZACION DE MAPA
-            const primerItem = datos[0];
-            actualizarMapa(primerItem.latitud, primerItem.longitud);
+            datos.forEach((elemento) => {
+                actualizarMapa(elemento.latitud, elemento.longitud);
+            });
             console.log('Primer item:', primerItem.latitud, primerItem.longitud);
             
 
