@@ -15,6 +15,17 @@ def busqueda(
     nombre_localidad: str = None,
     tipo: str = None
 ):
+    """Búsqueda de la información de los centros educativos según varios criterios.
+
+    Args: \n
+        codigo_postal (str, optional): Código postal del centro educativo. Defaults to None. \n
+        en_provincia (str, optional): Nombre de la provincia. Defaults to None. \n
+        nombre_localidad (str, optional): Nombre de la localidad. Defaults to None. \n
+        tipo (str, optional): Tipo del centro educativo. Defaults to None. \n
+
+    Returns:
+        dict: Resultado de la búsqueda.
+    """
     resultado = Repositorio.fetchBusqueda(
         codigo_postal=codigo_postal,
         en_provincia=en_provincia,
