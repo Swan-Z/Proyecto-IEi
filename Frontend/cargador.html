@@ -173,9 +173,16 @@
 
         // Obtener los datos JSON de la respuesta
         const responseData = await response.json();
+        
+        const correctos = responseData.correctos;
+        const reparados = responseData.reparados.map(item => `${item}`).join('\n');
+        const rechazados = responseData.rechazados.map(item => `${item}`).join('\n');
 
+        const textoFromateado = `Número de registros cargados correctamente: ${correctos}\nRegistros con errores y reparados:\n{${reparados}}\nRegistros con errores y rechazados\n{${rechazados}}`;
+        
+        document.getElementById('cuadroTexto').textContent = textoFromateado;
         // Actualizar el contenido del cuadro de texto con la respuesta del servidor
-        document.getElementById('cuadroTexto').textContent = JSON.stringify(responseData);
+        //document.getElementById('cuadroTexto').textContent = JSON.stringify(responseData);
     } catch (error) {
         console.error('Error al enviar datos al backend:', error);
     }

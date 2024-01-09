@@ -30,10 +30,12 @@ def cargar(
     comunidadValenciana: bool,
     cataluna: bool
 ):
-    if murcia ==True:
-        return murcia
-    if cataluna == True: 
-        return cataluna
+    # if murcia ==True:
+    #     return murcia
+    # if cataluna == True: 
+    #     return cataluna
+    
+    return {'correctos': 7, 'reparados': ['hello', 'how are you', 'im fine, thank you'], 'rechazados': ['hasta aqui, adios']}
     
 
 
