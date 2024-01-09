@@ -35,8 +35,10 @@ class Repositorio:
         # Retorna los datos obtenidos de la consulta
         return respuesta.data
     
+    
     def fetchBusqueda(codigo_postal, en_provincia, nombre_localidad, tipo):
         try:
+            
             centros = supabase.table('centro_educativo').select('*').eq('codigo_postal', codigo_postal).execute()
             tipo_centro = supabase.table('centro_educativo').select('*').eq('tipo', tipo).execute()
 
@@ -44,13 +46,13 @@ class Repositorio:
             localidad = supabase.table('localidad').select('*').eq('nombre', nombre_localidad).eq('en_provincia', provincia.data[0]['nombre']).execute()
 
             coincidencia = supabase.table('centro_educativo').select('*').eq('id_localidad', localidad.data[0]['id']).eq('tipo', tipo_centro.data[0]['tipo']).eq('codigo_postal', centros.data[0]['codigo_postal']).execute()
+            if (coincidencia is None):
+                raise ValueError('No se encontraron coincidencias')
             print(coincidencia.data)
             return coincidencia.data
-            
-
         except Exception as e:
-            print(f"Error fetching data: {e}")
-
+            print(e)
+            return None
 
 
     
