@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscador de centros educativos</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/ol@v8.2.0/dist/ol.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v8.2.0/ol.css">
+    <style>
+        .map {
+            height: 400px;
+            width: 100%;
+        }
+
+        .ol-popup {
+            position: absolute;
+            background-color: white;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            bottom: 12px;
+            left: -50px;
+            min-width: 160px;
+            display: none;
+        }
+
+        .ol-popup:after, .ol-popup:before {
+            top: 100%;
+            border: solid transparent;
+            content: " ";
+            height: 0;
+            width: 0;
+            position: absolute;
+            pointer-events: none;
+        }
+
+        .ol-popup:after {
+            border-top-color: white;
+            border-width: 10px;
+            left: 50%;
+            margin-left: -10px;
+        }
+
+        .ol-popup:before {
+            border-top-color: #ccc;
+            border-width: 11px;
+            left: 50%;
+            margin-left: -11px;
+        }
+
+        .ol-popup-closer {
+            text-decoration: none;
+            position: absolute;
+            top: 2px;
+            right: 8px;
+            font-size: 12px;
+            color: #808080;
+        }
+    </style>
+
+</head>
+<body>
+
+<h1>Buscador de centros educativos</h1>
+
+<div>
+    <label for="localidad" style="margin-left: 27px;">Localidad:</label>
+    <input type="text" id="localidad" style="width: 300px;" />
+</div>
+
+<div style="margin-top: 10px;">
+    <label for="codigoPostal">Código Postal:</label>
+    <input type="text" id="codigoPostal" style="width: 300px;" />
+</div>
+
+<div style="margin-top: 10px;">
+    <label for="provincia" style="margin-left: 28px;">Provincia:</label>
+    <input type="text" id="provincia" style="width: 300px;" />
+</div>
+
+<div style="margin-top: 10px;">
+    <label for="tipo" style="margin-left: 60px;">Tipo:</label>
+    <select id="tipo">
+        <option value="Público">Público</option>
+        <option value="Privado">Privado</option>
+        <option value="Concertado">Concertado</option>
+        <option value="Otro">Otro</option>
+    </select>
+</div>
+
+<div id="fuente" style="margin-top: 10px;" ></div>
+
+<div style="margin-top: 30px; margin-left: 235px;">
+    <button onclick="cancelar()" style="margin-right: 40px;">Cancelar</button>
+    <button onclick="buscar()">Buscar</button>
+</div>
+
+<div id="error" style="margin-top: 10px;"></div>
+
+<div id="sinResultados" style="display: none; color: red; font-size: 18px; text-align: center; margin-top: 20px;">
+    No se ha encontrado ningún centro educativo.
+</div>
+
+<div id="map" class="map"></div>
+
+<div id="popup" class="ol-popup">
+    <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+    <div id="popup-content"></div>
+</div>
+
+<script>
+    function obtenerValores() {
+        const localidad = document.getElementById("localidad").value;
+        const codigoPostal = document.getElementById("codigoPostal").value;
+        const provincia = document.getElementById("provincia").value;
+        const tipo = document.getElementById("tipo").value;
+
+        return { localidad, codigoPostal, provincia, tipo };
+    }
+
+    function cancelar() {
+        document.getElementById("localidad").value = "";
+        document.getElementById("codigoPostal").value = "";
+        document.getElementById("provincia").value = "";
+        document.getElementById("tipo").value = "";
+        document.getElementById('fuente').innerHTML = "";
+        document.getElementById('sinResultados').style.display = 'none';
+        borrarMarcadores();
+    }
+
+    async function buscar() {
+        try {
+            const { localidad, codigoPostal, provincia, tipo } = obtenerValores();
+
+            // Verificar si hay datos antes de continuar
+            if (localidad === "" && codigoPostal === "" && provincia === "" && tipo === "") {
+                document.getElementById('sinResultados').style.display = 'block';
+                return;
+            } else {
+                document.getElementById('sinResultados').style.display = 'none';
+            }
+
+            // Enviar los datos al backend
+            const url = `http://localhost:8000/busqueda/${localidad}/${provincia}/${codigoPostal}/${tipo}`;
+            
+            let response = [];
+            try {
+                response = await fetch(url, { method: 'GET' });
+            } catch (error) {
+                document.getElementById('sinResultados').style.display = 'block';
+            }
+
+            
+            const datos = await response.json();
+            
+            if (datos == null) {
+                document.getElementById('sinResultados').style.display = 'block';
+                return;
+            } else {
+                document.getElementById('sinResultados').style.display = 'none';
+            }
+
+            datos.forEach((elemento) => {
+                agregarMarcador(elemento);
+            });
+            
+        } catch (error) {
+            console.error('Error al cargar datos desde el backend:', error);
+        }
+    }
+
+    function agregarMarcador(datos) {
+        const coordenadas = [parseFloat(datos.long), parseFloat(datos.lat)];
+       
+        // Modificar el estilo del marcador
+        const markerStyle = new ol.style.Style({
+            image: new ol.style.Icon({
+                anchor: [0.5, 1],
+                src: 'https://openlayers.org/en/latest/examples/data/icon.png',
+                scale: 1,
+            }),
+        });
+
+        // AGREGAR MARCADOR AL MAPA CON EL NUEVO ESTILO
+        const marker = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.fromLonLat(coordenadas)),
+            name: datos.nombre,
+            tipo: datos.tipo,
+            direccion: datos.direccion,
+            localidad: datos.localidad,
+            codigoPostal: datos.codigo_postal,
+            provincia: datos.provincia,
+            descripcion: datos.descripcion,
+        });
+
+        marker.setStyle(markerStyle);
+
+        const markerSource = new ol.source.Vector({
+            features: [marker],
+        });
+
+        const markerLayer = new ol.layer.Vector({
+            source: markerSource,
+        });
+
+        map.addLayer(markerLayer);
+
+        // Hacer clic en el marcador muestra el popup
+        marker.on('click', function (event) {
+            mostrarPopup(event.coordinate, marker);
+        });
+    }
+
+    function mostrarPopup(coordinate, marker) {
+        const content = `
+            <p><strong>Nombre:</strong> ${marker.get('name')}</p>
+            <p><strong>Tipo:</strong> ${marker.get('tipo')}</p>
+            <p><strong>Dirección:</strong> ${marker.get('direccion')}</p>
+            <p><strong>Localidad:</strong> ${marker.get('localidad')}</p>
+            <p><strong>Código Postal:</strong> ${marker.get('codigoPostal')}</p>
+            <p><strong>Provincia:</strong> ${marker.get('provincia')}</p>
+            <p><strong>Descripción:</strong> ${marker.get('descripcion')}</p>
+        `;
+
+        document.getElementById('popup-content').innerHTML = content;
+
+        overlay.setPosition(coordinate);
+        popupContent.innerHTML = content;
+        overlay.setPosition(coordinate);
+    }
+
+    function borrarMarcadores() {
+        // Obtener todas las capas del mapa
+        const layers = map.getLayers().getArray();
+
+        // Filtrar las capas para obtener solo las capas de tipo Vector
+        const vectorLayers = layers.filter(layer => layer instanceof ol.layer.Vector);
+
+        // Eliminar cada capa de tipo Vector
+        vectorLayers.forEach(layer => map.removeLayer(layer));
+    }
+
+    var map = new ol.Map({
+        target: 'map',
+        layers: [
+            new ol.layer.Tile({
+                source: new ol.source.OSM()
+            })
+        ],
+        view: new ol.View({
+            center: ol.proj.fromLonLat([-3.70256,40.4165]), 
+            zoom: 12
+        })
+    });
+
+    // Crear overlay para el popup
+    const popup = document.getElementById('popup');
+    const popupContent = document.getElementById('popup-content');
+    const overlay = new ol.Overlay({
+        element: popup,
+        autoPan: true,
+        autoPanAnimation: {
+            duration: 250,
+        },
+    });
+    map.addOverlay(overlay);
+
+</script>
+
+</body>
+</html>
