@@ -142,7 +142,7 @@ def json_a_BD():
                 if 'lon' in fila['geo-referencia'] and fila['geo-referencia']['lon'] is not None and fila['geo-referencia']['lon'] != '':
                     fila['longitud'] = fila['geo-referencia'].pop('lon')
                 else:
-                    fila['lon'] = None
+                    fila['longitud'] = None
                     print(Colores.ROJO + 'No existe la clave lon por lo tanto esta fila no será insertada: ' + Colores.RESET)
                     print(Colores.ROJO + str(fila) + Colores.RESET)
                     rechazado=True
