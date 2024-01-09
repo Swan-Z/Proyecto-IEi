@@ -46,10 +46,7 @@
 
 <div id="fuente" style="margin-top: 10px;" ></div>
 
-<div id="popup" class="ol-popup">
-    <a href="#" id="popup-closer" class="ol-popup-closer"></a>
-    <div id="popup-content"></div>
-</div>
+
 
 <div style="margin-top: 30px; margin-left: 235px;">
     <button onclick="cancelar()" style="margin-right: 40px;">Cancelar</button>
@@ -66,27 +63,6 @@
 
 
 <script>
-    var overlay = new ol.Overlay({
-        element: document.getElementById('popup'),
-        autoPan: true,
-        autoPanAnimation: {
-            duration: 250,
-        },
-    });
-
-    var map = new ol.Map({
-        target: 'map',
-        layers: [
-            new ol.layer.Tile({
-                source: new ol.source.OSM()
-            })
-        ],
-        view: new ol.View({
-            center: ol.proj.fromLonLat([-3.70256,40.4165]), 
-            zoom: 12
-        })
-    });
-
     function obtenerValores() {
         const localidad = document.getElementById("localidad").value;
         const codigoPostal = document.getElementById("codigoPostal").value;
@@ -208,22 +184,24 @@
             });
 
             map.addLayer(markerLayer);
-
-            marker.on('click', function (evt) {
-            const content = `<p>Nombre: ${nombre}</p><p>Cardinalidad: ${cardinalidad}</p>`;
-            document.getElementById('popup-content').innerHTML = content;
-
-            overlay.setPosition(coordenadas);
-        });
-
-        // Cerrar la popup al hacer clic en el botón de cierre
-        document.getElementById('popup-closer').onclick = function () {
-            overlay.setPosition(undefined);
-            return false;
-        };
         }
 
-        function borrarMarcadores() {
+
+        
+    var map = new ol.Map({
+        target: 'map',
+        layers: [
+            new ol.layer.Tile({
+                source: new ol.source.OSM()
+            })
+        ],
+        view: new ol.View({
+            center: ol.proj.fromLonLat([-3.70256,40.4165]), 
+            zoom: 12
+        })
+    });
+
+    function borrarMarcadores() {
         // Obtener todas las capas del mapa
         const layers = map.getLayers().getArray();
 
@@ -233,8 +211,6 @@
         // Eliminar cada capa de tipo Vector
         vectorLayers.forEach(layer => map.removeLayer(layer));
     }
-   
-    
 
 </script>
 
