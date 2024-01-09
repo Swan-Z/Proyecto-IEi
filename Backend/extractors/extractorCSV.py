@@ -96,6 +96,10 @@ def json_a_BD():
                 fila['codigo_postal'] = str(cp).zfill(5)  #añadir 0 por delante
                 fila['loc.codigo'] = str(cp).zfill(5)
                 fila['pro.codigo'] = re.search(r'\d{2}', str(cp).zfill(5)).group()
+                if fila['pro.codigo'] == '03':
+                    reparado=True
+                    motivo += 'al código postal le faltaba un dígito, '
+                    arreglo += 'se le ha añadido un 0 por delante.'
             else:
                 fila['codigo_postal'] = None
                 print(Colores.ROJO + 'No existe la clave CODIGO_POSTAL, por lo tanto esta fila no será insertada: ' + Colores.RESET)
