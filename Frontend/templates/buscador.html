@@ -294,10 +294,18 @@
 
 
     function borrarMarcadores() {
-        const layers = map.getLayers().getArray();
-        const vectorLayers = layers.filter(layer => layer instanceof ol.layer.Vector);
-        vectorLayers.forEach(layer => map.removeLayer(layer));
-    }
+    const layers = map.getLayers().getArray();
+    
+    layers.forEach(layer => {
+        if (layer instanceof ol.layer.Vector) {
+            const source = layer.getSource();
+            if (source instanceof ol.source.Vector) {
+                source.clear();
+            }
+        }
+    });
+}
+
 </script>
 
 </body>
