@@ -12,6 +12,33 @@
             height: 400px;
             width: 100%;
         }
+
+        .ol-popup {
+            position: absolute;
+            background-color: white;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #cccccc;
+            bottom: 12px;
+            left: -50px;
+            min-width: 160px;
+            font-size: 14px;
+        }
+
+        .ol-popup-closer {
+            text-decoration: none;
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            font-size: 18px;
+            color: #333; /* Cambia el color según tus preferencias */
+            cursor: pointer;
+            z-index: 1;
+        }
+
+        
+
     </style>
 
 </head>
@@ -44,9 +71,7 @@
     </select>
 </div>
 
-<div id="fuente" style="margin-top: 10px;" ></div>
-
-
+<div id="fuente" style="margin-top: 10px;"></div>
 
 <div style="margin-top: 30px; margin-left: 235px;">
     <button onclick="cancelar()" style="margin-right: 40px;">Cancelar</button>
@@ -59,10 +84,56 @@
     No se ha encontrado ningún centro educativo.
 </div>
 
-<div id="map" style="width: 100%; height: 400px; margin-top: 20px;"></div>
+<div id="map" class="map" style="margin-top: 20px;"></div>
+
+<div id="popup" class="ol-popup">
+    <a href="#" id="popup-closer" class="ol-popup-closer">&#10006;</a>
+    <div id="popup-content"></div>
+</div>
+
 
 
 <script>
+    var map = new ol.Map({
+        target: 'map',
+        layers: [
+            new ol.layer.Tile({
+                source: new ol.source.OSM()
+            })
+        ],
+        view: new ol.View({
+            center: ol.proj.fromLonLat([-3.70256, 40.4165]),
+            zoom: 15
+        })
+    });
+
+    const popupLayer = new ol.layer.Vector({
+        source: new ol.source.Vector(),
+    });
+    map.addLayer(popupLayer);
+
+
+    const selectClick = new ol.interaction.Select({
+    condition: ol.events.condition.click,
+    });
+
+    map.addInteraction(selectClick);
+
+    selectClick.on('select', function (event) {
+        if (event.selected.length > 0) {
+            console.log('Clic en la feature', event.selected[0].getProperties());
+            mostrarPopup(event.selected[0]);
+        }
+    });
+
+    document.getElementById('popup-closer').onclick = function () {
+    const overlays = map.getOverlays().getArray();
+    overlays.forEach(overlay => overlay.setPosition(undefined));
+    return false;
+};
+
+
+
     function obtenerValores() {
         const localidad = document.getElementById("localidad").value;
         const codigoPostal = document.getElementById("codigoPostal").value;
@@ -82,13 +153,11 @@
         borrarMarcadores();
     }
 
-
     async function buscar() {
         try {
-            borrarMarcadores();
+            //borrarMarcadores();
             const { localidad, codigoPostal, provincia, tipo } = obtenerValores();
 
-            // Verificar si hay datos antes de continuar
             if (localidad === "" && codigoPostal === "" && provincia === "" && tipo === "") {
                 document.getElementById('sinResultados').style.display = 'block';
                 return;
@@ -96,20 +165,18 @@
                 document.getElementById('sinResultados').style.display = 'none';
             }
 
-            // Enviar los datos al backend
             const url = `http://localhost:8000/busqueda/${localidad}/${provincia}/${codigoPostal}/${tipo}`;
-            
-            let response = [];
+
+            let response;
             try {
                 response = await fetch(url, { method: 'GET' });
             } catch (error) {
                 document.getElementById('sinResultados').style.display = 'block';
             }
 
-            
             const datos = await response.json();
-            
-            if (datos == null) {
+
+            if (!datos || datos.length === 0) {
                 document.getElementById('sinResultados').style.display = 'block';
                 return;
             } else {
@@ -117,9 +184,8 @@
             }
 
             datos.forEach((elemento) => {
-                actualizarMapa(elemento.latitud, elemento.longitud);
+                actualizarMapa(elemento.latitud, elemento.longitud, elemento.nombre, elemento.tipo, elemento.direccion, elemento.descripcion);
             });
-            
 
             const tablaHTML = `<div style="max-width: auto; margin: 0 auto; font-size: 16px;">
                             <table style="border-collapse: collapse; width: 100%; border: 1px solid #dddddd;">
@@ -139,79 +205,99 @@
                     `<tr><td style="border: 1px solid #dddddd; text-align: left; padding: 8px;">${item.nombre}
                                         </td><td style="border: 1px solid #dddddd; text-align: left; padding: 8px;">${item.tipo}
                                         </td><td style="border: 1px solid #dddddd; text-align: left; padding: 8px;">${item.direccion}
-                                        </td><td style="border: 1px solid #dddddd; text-align: left; padding: 8px;">${document.getElementById("localidad").value}
+                                        </td><td style="border: 1px solid #dddddd; text-align: left; padding: 8px;">${localidad}
                                         </td><td style="border: 1px solid #dddddd; text-align: left; padding: 8px;">${item.codigo_postal}
-                                        </td><td style="border: 1px solid #dddddd; text-align: left; padding: 8px;">${document.getElementById("provincia").value}
+                                        </td><td style="border: 1px solid #dddddd; text-align: left; padding: 8px;">${provincia}
                                         </td><td style="border: 1px solid #dddddd; text-align: left; padding: 8px;">${item.descripcion}
                                         </td></tr>`).join('')}
                                 </tbody>
                             </table>
                         </div>`;
 
-            // Cambiar el contenido HTML del elemento con id "fuente"
             document.getElementById('fuente').innerHTML = tablaHTML;
         } catch (error) {
             console.error('Error al cargar datos desde el backend:', error);
         }
     }
 
-    function actualizarMapa(latitud, longitud) {
-            const coordenadas = [parseFloat(longitud), parseFloat(latitud)];
-            map.getView().setCenter(ol.proj.fromLonLat(coordenadas));
+    function actualizarMapa(latitud, longitud, nombre, tipo, direccion, descripcion) {
+    const coordenadas = [parseFloat(longitud), parseFloat(latitud)];
+    map.getView().setCenter(ol.proj.fromLonLat(coordenadas));
 
-            // Modificar el estilo del marcador
-            const markerStyle = new ol.style.Style({
-                image: new ol.style.Icon({
-                    anchor: [0.5, 1],
-                    src: 'https://openlayers.org/en/latest/examples/data/icon.png', // Puedes cambiar la URL de la imagen del marcador
-                    scale: 1, // Ajusta la escala del marcador según tu preferencia
-                }),
-            });
-
-            // AGREGAR MARCADOR AL MAPA CON EL NUEVO ESTILO
-            const marker = new ol.Feature({
-                geometry: new ol.geom.Point(ol.proj.fromLonLat(coordenadas)),
-            });
-
-            marker.setStyle(markerStyle);
-
-            const markerSource = new ol.source.Vector({
-                features: [marker],
-            });
-
-            const markerLayer = new ol.layer.Vector({
-                source: markerSource,
-            });
-
-            map.addLayer(markerLayer);
-        }
-
-
-        
-    var map = new ol.Map({
-        target: 'map',
-        layers: [
-            new ol.layer.Tile({
-                source: new ol.source.OSM()
-            })
-        ],
-        view: new ol.View({
-            center: ol.proj.fromLonLat([-3.70256,40.4165]), 
-            zoom: 15
-        })
+    const markerStyle = new ol.style.Style({
+        image: new ol.style.Icon({
+            anchor: [0.5, 1],
+            src: 'https://openlayers.org/en/latest/examples/data/icon.png',
+            scale: 1,
+        }),
     });
 
-    function borrarMarcadores() {
-        // Obtener todas las capas del mapa
-        const layers = map.getLayers().getArray();
+    const marker = new ol.Feature({
+        geometry: new ol.geom.Point(ol.proj.fromLonLat(coordenadas)),
+        nombre: nombre,
+        tipo: tipo,
+        direccion: direccion,
+        descripcion: descripcion,
+    });
 
-        // Filtrar las capas para obtener solo las capas de tipo Vector
-        const vectorLayers = layers.filter(layer => layer instanceof ol.layer.Vector);
+    marker.setStyle(markerStyle);
 
-        // Eliminar cada capa de tipo Vector
-        vectorLayers.forEach(layer => map.removeLayer(layer));
+    marker.on('click', function () {
+    console.log('Clic en el marcador');
+    mostrarPopup(marker);
+    });
+
+    popupLayer.getSource().addFeature(marker);
+}
+
+    function mostrarPopup(marker) {
+        const coordenadas = marker.getGeometry().getCoordinates();
+        const nombre = marker.get('nombre');
+        const tipo = marker.get('tipo');
+        const direccion = marker.get('direccion');
+        const descripcion = marker.get('descripcion');
+
+        // Obtener el elemento popup-content
+        const popupContentElement = document.getElementById('popup-content');
+
+        // Verificar si el elemento existe
+        if (popupContentElement) {
+            // Crear contenido HTML para el popup
+            const popupContent = `<div><h2>${nombre}</h2><p>${tipo}</p><p>${direccion}</p><p>${descripcion}</p></div>`;
+
+            // Establecer el contenido HTML del elemento popup-content
+            popupContentElement.innerHTML = popupContent;
+
+
+            // Crear un overlay con el contenido HTML
+            const popupOverlay = new ol.Overlay({
+                element: document.getElementById('popup'),
+                positioning: 'bottom-center',
+                stopEvent: false,
+                offset: [0, -50],
+            });
+
+        
+
+        // Establecer la posición del overlay en las coordenadas del marcador
+        popupOverlay.setPosition(coordenadas);
+
+        // Añadir el overlay al mapa
+        map.addOverlay(popupOverlay);
+
+
+        } else {
+            console.error("Elemento 'popup-content' no encontrado.");
+        }
     }
 
+
+
+    function borrarMarcadores() {
+        const layers = map.getLayers().getArray();
+        const vectorLayers = layers.filter(layer => layer instanceof ol.layer.Vector);
+        vectorLayers.forEach(layer => map.removeLayer(layer));
+    }
 </script>
 
 </body>
