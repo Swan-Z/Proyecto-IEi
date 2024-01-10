@@ -85,6 +85,7 @@
 
     async function buscar() {
         try {
+            borrarMarcadores();
             const { localidad, codigoPostal, provincia, tipo } = obtenerValores();
 
             // Verificar si hay datos antes de continuar
