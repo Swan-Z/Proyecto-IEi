@@ -155,7 +155,7 @@
 
     async function buscar() {
         try {
-            //borrarMarcadores();
+            borrarMarcadores();
             const { localidad, codigoPostal, provincia, tipo } = obtenerValores();
 
             if (localidad === "" && codigoPostal === "" && provincia === "" && tipo === "") {
